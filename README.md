@@ -26,7 +26,7 @@ A modern, responsive portfolio website showcasing Nic Mapogha's data science pro
 
 1. Clone the repository
 ```
-git clone https://github.com/nicmapogha/portfolio.git
+git clone https://github.com/nicnonnious/portfolio.git
 cd portfolio
 ```
 
@@ -84,6 +84,6 @@ MIT
 
 ## Contact
 
-Nic Mapogha - [nicmapogha@example.com](mailto:nicmapogha@example.com)
+Nic Mapogha - [nicmapogha@gmail.com](mailto:nicmapogha@gmail.com)
 
-Project Link: [https://github.com/nicmapogha/portfolio](https://github.com/nicmapogha/portfolio) 
+Project Link: [https://github.com/ninonnious/portfolio](https://github.com/nicnonnious/portfolio) 
