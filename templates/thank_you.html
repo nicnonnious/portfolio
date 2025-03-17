@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+
+{% block title %}Thank You - Nic Mapogha{% endblock %}
+
+{% block content %}
+<!-- Thank You Section -->
+<section class="section pt-5 mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center" data-aos="fade-up">
+                <div class="card p-5">
+                    <div class="thank-you-icon mb-4">
+                        <i class="fas fa-check-circle text-success fa-5x"></i>
+                    </div>
+                    <h1 class="display-4 mb-4">Thank You!</h1>
+                    <p class="lead mb-4">Your message has been sent successfully. I'll get back to you as soon as possible.</p>
+                    <div class="mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary me-3">Back to Home</a>
+                        <a href="{{ url_for('projects') }}" class="btn btn-outline-primary">View Projects</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What's Next Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>What's Next?</h2>
+            <p class="text-muted">While you wait for my response, you might want to explore more</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-4">
+                            <i class="fas fa-laptop-code fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Explore Projects</h4>
+                        <p class="card-text text-muted">Check out my portfolio of data science projects and case studies.</p>
+                        <a href="{{ url_for('projects') }}" class="btn btn-outline-primary mt-3">View Projects</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-4">
+                            <i class="fas fa-chart-line fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">View Dashboard</h4>
+                        <p class="card-text text-muted">Explore interactive visualizations of my skills and expertise.</p>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary mt-3">View Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-4">
+                            <i class="fas fa-user fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">About Me</h4>
+                        <p class="card-text text-muted">Learn more about my background, skills, and experience.</p>
+                        <a href="{{ url_for('about') }}" class="btn btn-outline-primary mt-3">About Me</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Connect Section -->
+<section class="section">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="mb-4">Connect With Me</h2>
+        <p class="text-muted mb-5">Follow me on social media for updates on my latest projects and insights</p>
+        
+        <div class="social-links d-flex justify-content-center">
+            <a href="https://github.com/nicmapogha" target="_blank" class="social-link mx-3">
+                <i class="fab fa-github fa-3x"></i>
+            </a>
+            <a href="https://linkedin.com/in/nicmapogha" target="_blank" class="social-link mx-3">
+                <i class="fab fa-linkedin fa-3x"></i>
+            </a>
+            <a href="https://twitter.com/nicmapogha" target="_blank" class="social-link mx-3">
+                <i class="fab fa-twitter fa-3x"></i>
+            </a>
+            <a href="https://medium.com/@nicmapogha" target="_blank" class="social-link mx-3">
+                <i class="fab fa-medium fa-3x"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .thank-you-icon {
+        animation: pulse 2s infinite;
+    }
+    
+    .social-link {
+        color: var(--gray);
+        transition: var(--transition);
+    }
+    
+    .social-link:hover {
+        color: var(--primary);
+        transform: translateY(-5px);
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,394 @@
+{% extends 'layout.html' %}
+
+{% block title %}About - Nic Mapogha{% endblock %}
+
+{% block content %}
+<!-- About Header -->
+<section class="section pt-5 mt-5">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>About Me</h2>
+            <p class="text-muted">Learn more about my background, skills, and experience</p>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
+                <div class="about-img">
+                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Nic Mapogha" class="img-fluid rounded-3">
+                </div>
+            </div>
+            
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="about-content">
+                    <h3>Nic Mapogha</h3>
+                    <h4 class="text-primary mb-4">Data Scientist & Machine Learning Engineer</h4>
+                    <p>I am a passionate data scientist with expertise in machine learning, statistical analysis, and data visualization. With over 5 years of experience in the field, I have helped businesses across various industries leverage their data to make informed decisions and drive growth.</p>
+                    <p>My approach combines technical expertise with business acumen to deliver solutions that not only solve complex problems but also provide actionable insights. I believe in the power of data to transform businesses and improve lives.</p>
+                    <p>When I'm not working with data, you can find me contributing to open-source projects, writing technical articles, or exploring the latest advancements in AI and machine learning.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-envelope text-primary me-3 fa-lg"></i>
+                                <div>
+                                    <h6 class="mb-0">Email</h6>
+                                    <p class="mb-0">nic@mdiaidetection.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-phone text-primary me-3 fa-lg"></i>
+                                <div>
+                                    <h6 class="mb-0">Phone</h6>
+                                    <p class="mb-0">+1 (815) 561-5451</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-map-marker-alt text-primary me-3 fa-lg"></i>
+                                <div>
+                                    <h6 class="mb-0">Location</h6>
+                                    <p class="mb-0">Chicago, IL</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-globe text-primary me-3 fa-lg"></i>
+                                <div>
+                                    <h6 class="mb-0">Website</h6>
+                                    <p class="mb-0">www.nicmapogha.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('static', filename='files/nic_mapogha_resume.pdf') }}" class="btn btn-primary me-3" target="_blank">
+                            <i class="fas fa-download me-2"></i> Download Resume
+                        </a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-paper-plane me-2"></i> Contact Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="section bg-light skills-section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>My Skills</h2>
+            <p class="text-muted">Technical expertise and proficiency in data science tools and technologies</p>
+        </div>
+        
+        <div class="row">
+            {% for category, skills in skill_categories.items() %}
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <h3 class="mb-4">{{ category }}</h3>
+                {% for skill in skills %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <p class="mb-0">{{ skill.name }}</p>
+                        <p class="mb-0">{{ skill.proficiency }}%</p>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-value="{{ skill.proficiency }}"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Work Experience</h2>
+            <p class="text-muted">My professional journey in the field of data science</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="timeline">
+                    {% for experience in experiences %}
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <div class="timeline-content">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>{{ experience.position }}</h4>
+                                    <h5 class="text-primary">{{ experience.company }}</h5>
+                                    <p class="timeline-date">
+                                        <i class="far fa-calendar-alt me-2"></i>
+                                        {{ experience.start_date.strftime('%b %Y') }} - 
+                                        {% if experience.end_date %}
+                                            {{ experience.end_date.strftime('%b %Y') }}
+                                        {% else %}
+                                            Present
+                                        {% endif %}
+                                    </p>
+                                    <p class="text-muted">{{ experience.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Education Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Education</h2>
+            <p class="text-muted">My academic background and qualifications</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="timeline">
+                    {% for education in educations %}
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <div class="timeline-content">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>{{ education.degree }} in {{ education.field }}</h4>
+                                    <h5 class="text-primary">{{ education.institution }}</h5>
+                                    <p class="timeline-date">
+                                        <i class="far fa-calendar-alt me-2"></i>
+                                        {{ education.start_date.strftime('%b %Y') }} - 
+                                        {% if education.end_date %}
+                                            {{ education.end_date.strftime('%b %Y') }}
+                                        {% else %}
+                                            Present
+                                        {% endif %}
+                                    </p>
+                                    {% if education.description %}
+                                    <p class="text-muted">{{ education.description }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Services I Offer</h2>
+            <p class="text-muted">Specialized data science services to help businesses make data-driven decisions</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="service-title">Data Analysis</h3>
+                    <p class="service-description">Transforming raw data into meaningful insights through statistical analysis and visualization techniques.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="service-title">Machine Learning</h3>
+                    <p class="service-description">Building predictive models and algorithms to solve complex business problems and automate decision-making.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="service-title">Data Visualization</h3>
+                    <p class="service-description">Creating interactive dashboards and visual stories that communicate complex data in an accessible way.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="service-title">Database Design</h3>
+                    <p class="service-description">Designing efficient database structures for optimal data storage, retrieval, and management.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="service-title">AI Solutions</h3>
+                    <p class="service-description">Implementing artificial intelligence solutions to automate processes and enhance decision-making capabilities.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="service-title">Data Science Training</h3>
+                    <p class="service-description">Providing comprehensive training and workshops on data science tools, techniques, and best practices.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Testimonials</h2>
+            <p class="text-muted">What clients and colleagues say about my work</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ url_for('static', filename='images/testimonial1.jpg') }}" alt="Client" class="rounded-circle me-3" width="60">
+                                <div>
+                                    <h5 class="mb-0">Sarah Johnson</h5>
+                                    <p class="text-muted mb-0">CEO, TechInnovate</p>
+                                </div>
+                            </div>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="mb-0">"Nic's data analysis skills transformed our business. His insights helped us identify key growth opportunities and optimize our operations. Highly recommended!"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ url_for('static', filename='images/testimonial2.jpg') }}" alt="Client" class="rounded-circle me-3" width="60">
+                                <div>
+                                    <h5 class="mb-0">Michael Chen</h5>
+                                    <p class="text-muted mb-0">CTO, DataDrive</p>
+                                </div>
+                            </div>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="mb-0">"Working with Nic was a game-changer for our team. His machine learning models significantly improved our prediction accuracy and customer targeting strategies."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ url_for('static', filename='images/testimonial3.jpg') }}" alt="Client" class="rounded-circle me-3" width="60">
+                                <div>
+                                    <h5 class="mb-0">Emily Rodriguez</h5>
+                                    <p class="text-muted mb-0">Marketing Director, GrowthX</p>
+                                </div>
+                            </div>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p class="mb-0">"Nic created an amazing dashboard that made our complex data accessible to everyone in the company. His visualization skills are exceptional!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section bg-primary text-white">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="mb-4">Ready to work together?</h2>
+        <p class="mb-4">Let's collaborate on your next data science project</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-light">Get in Touch</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize skill bars animation
+        const skillBars = document.querySelectorAll('.skill-progress');
+        
+        if (skillBars.length > 0) {
+            const animateSkills = () => {
+                skillBars.forEach(bar => {
+                    const value = bar.getAttribute('data-value');
+                    bar.style.width = value + '%';
+                });
+            };
+            
+            // Animate on page load
+            setTimeout(animateSkills, 500);
+            
+            // Re-animate when scrolled into view
+            const skillSection = document.querySelector('.skills-section');
+            
+            if (skillSection) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateSkills();
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(skillSection);
+            }
+        }
+    });
+</script>
+{% endblock %} 

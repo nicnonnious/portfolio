@@ -1,0 +1,238 @@
+{% extends 'layout.html' %}
+
+{% block title %}Nic Mapogha - Data Scientist Portfolio{% endblock %}
+
+{% block extra_css %}
+<!-- Typed.js -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Hi, I'm Nic Mapogha</h1>
+                <h2 class="hero-subtitle">I'm a <span class="typed-text text-primary"></span></h2>
+                <p class="text-light mb-4">Transforming complex data into actionable insights and innovative solutions</p>
+                <div class="hero-btn">
+                    <a href="#featured-projects" class="btn btn-primary me-3">View My Work</a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-light">Contact Me</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="section bg-light">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>What I Do</h2>
+            <p class="text-muted">Specialized data science services to help businesses make data-driven decisions</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="service-title">Data Analysis</h3>
+                    <p class="service-description">Transforming raw data into meaningful insights through statistical analysis and visualization techniques.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="service-title">Machine Learning</h3>
+                    <p class="service-description">Building predictive models and algorithms to solve complex business problems and automate decision-making.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="service-title">Data Visualization</h3>
+                    <p class="service-description">Creating interactive dashboards and visual stories that communicate complex data in an accessible way.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section id="featured-projects" class="section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Featured Projects</h2>
+            <p class="text-muted">Explore some of my recent data science projects</p>
+        </div>
+        
+        <div class="row">
+            {% for project in projects %}
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="card h-100 project-card">
+                    {% if project.image %}
+                    <img src="{{ url_for('static', filename='images/' + project.image) }}" class="card-img-top" alt="{{ project.title }}">
+                    {% else %}
+                    <div class="bg-light text-center py-5">
+                        <i class="fas fa-code fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.description|truncate(100) }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{{ url_for('project_detail', id=project.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                {% if project.github_link %}
+                                <a href="{{ project.github_link }}" target="_blank" class="btn btn-sm btn-outline-secondary">GitHub</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="{{ url_for('projects') }}" class="btn btn-primary">View All Projects</a>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills" class="section bg-light skills-section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>My Skills</h2>
+            <p class="text-muted">Technical expertise and proficiency in data science tools and technologies</p>
+        </div>
+        
+        <div class="row">
+            {% for category, skills in skill_categories.items() %}
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <h3 class="mb-4">{{ category }}</h3>
+                {% for skill in skills %}
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <p class="mb-0">{{ skill.name }}</p>
+                        <p class="mb-0">{{ skill.proficiency }}%</p>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-value="{{ skill.proficiency }}"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section id="experience" class="section">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>Experience & Education</h2>
+            <p class="text-muted">My professional journey and academic background</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="mb-4">Work Experience</h3>
+                <div class="timeline">
+                    {% for experience in experiences %}
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>{{ experience.position }}</h4>
+                            <h5>{{ experience.company }}</h5>
+                            <p class="timeline-date">
+                                {{ experience.start_date.strftime('%b %Y') }} - 
+                                {% if experience.end_date %}
+                                    {{ experience.end_date.strftime('%b %Y') }}
+                                {% else %}
+                                    Present
+                                {% endif %}
+                            </p>
+                            <p class="text-muted">{{ experience.description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="mb-4">Education</h3>
+                <div class="timeline">
+                    {% for education in educations %}
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>{{ education.degree }} in {{ education.field }}</h4>
+                            <h5>{{ education.institution }}</h5>
+                            <p class="timeline-date">
+                                {{ education.start_date.strftime('%b %Y') }} - 
+                                {% if education.end_date %}
+                                    {{ education.end_date.strftime('%b %Y') }}
+                                {% else %}
+                                    Present
+                                {% endif %}
+                            </p>
+                            {% if education.description %}
+                            <p class="text-muted">{{ education.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section bg-primary text-white">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="mb-4">Ready to work together?</h2>
+        <p class="mb-4">Let's collaborate on your next data science project</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-light">Get in Touch</a>
+    </div>
+</section>
+
+<!-- Back to Top Button -->
+<a href="#" id="back-to-top" class="btn btn-primary back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize Typed.js
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.querySelector('.typed-text')) {
+            const options = {
+                strings: [
+                    'Data Scientist',
+                    'Machine Learning Engineer',
+                    'Data Analyst',
+                    'AI Enthusiast'
+                ],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true
+            };
+            
+            new Typed('.typed-text', options);
+        }
+    });
+</script>
+{% endblock %} 

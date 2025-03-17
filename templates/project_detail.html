@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ project.title }} - Nic Mapogha{% endblock %}
+
+{% block content %}
+<!-- Project Detail Header -->
+<section class="section pt-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <nav aria-label="breadcrumb" data-aos="fade-up">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('projects') }}">Projects</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                    </ol>
+                </nav>
+                
+                <div class="project-header text-center mb-5" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold">{{ project.title }}</h1>
+                    <div class="d-flex justify-content-center flex-wrap my-4">
+                        {% for tech in project.technologies.split(', ') %}
+                        <span class="badge bg-primary me-2 mb-2">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="project-links">
+                        {% if project.github_link %}
+                        <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline-dark me-3">
+                            <i class="fab fa-github me-2"></i> View on GitHub
+                        </a>
+                        {% endif %}
+                        {% if project.live_link %}
+                        <a href="{{ project.live_link }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt me-2"></i> Live Demo
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Image -->
+<section class="section-sm">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                <div class="project-image">
+                    {% if project.image %}
+                    <img src="{{ url_for('static', filename='images/' + project.image) }}" alt="{{ project.title }}" class="img-fluid rounded-3 shadow">
+                    {% else %}
+                    <div class="bg-light text-center py-5 rounded-3">
+                        <i class="fas fa-code fa-5x text-primary"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Content -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="project-content" data-aos="fade-up">
+                    <h2 class="mb-4">Project Overview</h2>
+                    <p class="lead">{{ project.description }}</p>
+                    
+                    <div class="mt-5">
+                        <h3 class="mb-4">Project Details</h3>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Problem Statement</h4>
+                                <p class="card-text">The project aimed to address the challenge of analyzing large volumes of sales data to identify patterns and insights that could drive business growth and optimize operations.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Approach & Methodology</h4>
+                                <p class="card-text">I employed a comprehensive data analysis approach that included:</p>
+                                <ul>
+                                    <li>Data collection and preprocessing to ensure quality and consistency</li>
+                                    <li>Exploratory data analysis to identify patterns and correlations</li>
+                                    <li>Statistical modeling to validate hypotheses and make predictions</li>
+                                    <li>Interactive visualization to communicate insights effectively</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Technologies Used</h4>
+                                <div class="row">
+                                    {% for tech in project.technologies.split(', ') %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <span>{{ tech }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Key Features</h4>
+                                <ul>
+                                    <li>Interactive dashboards for real-time data monitoring</li>
+                                    <li>Predictive analytics for sales forecasting</li>
+                                    <li>Customer segmentation based on purchasing behavior</li>
+                                    <li>Anomaly detection for identifying unusual patterns</li>
+                                    <li>Automated reporting system for stakeholders</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Results & Impact</h4>
+                                <p class="card-text">The implementation of this data analysis dashboard resulted in:</p>
+                                <ul>
+                                    <li>20% increase in sales through targeted marketing campaigns</li>
+                                    <li>15% reduction in operational costs by identifying inefficiencies</li>
+                                    <li>Improved customer satisfaction through personalized recommendations</li>
+                                    <li>Enhanced decision-making capabilities for management</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Challenges & Learnings</h4>
+                                <p class="card-text">Throughout the project, I encountered several challenges:</p>
+                                <ul>
+                                    <li>Dealing with inconsistent and missing data</li>
+                                    <li>Optimizing performance for large datasets</li>
+                                    <li>Balancing technical complexity with user-friendly interfaces</li>
+                                </ul>
+                                <p class="card-text mt-3">These challenges provided valuable learning opportunities and helped me develop more robust data science solutions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- More Projects -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+            <h2>More Projects</h2>
+            <p class="text-muted">Explore more of my data science work</p>
+        </div>
+        
+        <div class="row">
+            {% for p in projects[:3] if p.id != project.id %}
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="card h-100 project-card">
+                    {% if p.image %}
+                    <img src="{{ url_for('static', filename='images/' + p.image) }}" class="card-img-top" alt="{{ p.title }}">
+                    {% else %}
+                    <div class="bg-light text-center py-5">
+                        <i class="fas fa-code fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ p.title }}</h5>
+                        <p class="card-text text-muted">{{ p.description|truncate(100) }}</p>
+                        <a href="{{ url_for('project_detail', id=p.id) }}" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="{{ url_for('projects') }}" class="btn btn-outline-primary">View All Projects</a>
+        </div>
+    </div>
+</section>
+{% endblock %} 

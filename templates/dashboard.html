@@ -1,0 +1,485 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard - Nic Mapogha{% endblock %}
+
+{% block extra_css %}
+<!-- Chart.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<!-- D3.js -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+<style>
+    .dashboard-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        height: 100%;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 20px;
+    }
+    
+    .skill-category {
+        margin-bottom: 30px;
+    }
+    
+    .metric-card {
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        height: 100%;
+    }
+    
+    .metric-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .metric-label {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+    }
+    
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    }
+    
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #0dcaf0 0%, #0891b2 100%);
+    }
+    
+    .bg-gradient-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #f59e0b 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<section class="section pt-5 mt-5">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Data Science Dashboard</h2>
+            <p class="text-muted">Interactive visualizations of my skills, projects, and expertise</p>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card metric-card bg-gradient-primary text-white">
+                    <div class="metric-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="metric-value">{{ projects|length }}</div>
+                    <div class="metric-label">Projects Completed</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card metric-card bg-gradient-success text-white">
+                    <div class="metric-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="metric-value">5+</div>
+                    <div class="metric-label">Years Experience</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card metric-card bg-gradient-info text-white">
+                    <div class="metric-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="metric-value">10+</div>
+                    <div class="metric-label">Certifications</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="card metric-card bg-gradient-warning text-white">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-value">20+</div>
+                    <div class="metric-label">Happy Clients</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skills Radar Chart -->
+        <div class="row mb-5">
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Skills Overview</h3>
+                        <div class="chart-container">
+                            <canvas id="skillsRadarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Technologies Pie Chart -->
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Technologies Used</h3>
+                        <div class="chart-container">
+                            <canvas id="technologiesPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skill Categories Bar Charts -->
+        <div class="row mb-5">
+            <div class="col-12" data-aos="fade-up">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Skills by Category</h3>
+                        <div id="skillCategoriesContainer">
+                            <!-- Skill category charts will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Project Timeline -->
+        <div class="row mb-5">
+            <div class="col-12" data-aos="fade-up">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Project Timeline</h3>
+                        <div class="chart-container" style="height: 400px;">
+                            <div id="projectTimeline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skills Correlation Heatmap -->
+        <div class="row">
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Skills Correlation</h3>
+                        <div class="chart-container">
+                            <div id="skillsHeatmap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Learning Progress -->
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <h3 class="dashboard-title">Learning Progress</h3>
+                        <div class="chart-container">
+                            <canvas id="learningProgressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Parse skill data from Flask
+        const skillData = {{ skill_data|safe }};
+        
+        // Extract categories and skills for radar chart
+        const categories = Object.keys(skillData);
+        const radarLabels = [];
+        const radarData = [];
+        
+        // Get top skills from each category for radar chart
+        categories.forEach(category => {
+            const topSkill = skillData[category].reduce((prev, current) => {
+                return (prev.proficiency > current.proficiency) ? prev : current;
+            });
+            radarLabels.push(topSkill.name);
+            radarData.push(topSkill.proficiency);
+        });
+        
+        // Skills Radar Chart
+        const radarCtx = document.getElementById('skillsRadarChart').getContext('2d');
+        const skillsRadarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [{
+                    label: 'Skill Proficiency',
+                    data: radarData,
+                    backgroundColor: 'rgba(67, 97, 238, 0.2)',
+                    borderColor: 'rgba(67, 97, 238, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(67, 97, 238, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(67, 97, 238, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+        
+        // Technologies Pie Chart (simulated data)
+        const techLabels = ['Python', 'R', 'SQL', 'JavaScript', 'Tableau', 'TensorFlow'];
+        const techData = [35, 20, 15, 10, 10, 10];
+        const techColors = [
+            'rgba(67, 97, 238, 0.8)',
+            'rgba(76, 201, 240, 0.8)',
+            'rgba(63, 55, 201, 0.8)',
+            'rgba(247, 37, 133, 0.8)',
+            'rgba(58, 134, 255, 0.8)',
+            'rgba(74, 222, 128, 0.8)'
+        ];
+        
+        const pieCtx = document.getElementById('technologiesPieChart').getContext('2d');
+        const technologiesPieChart = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: techLabels,
+                datasets: [{
+                    data: techData,
+                    backgroundColor: techColors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+        
+        // Skills by Category Bar Charts
+        const skillCategoriesContainer = document.getElementById('skillCategoriesContainer');
+        
+        categories.forEach((category, index) => {
+            // Create container for this category
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'skill-category';
+            
+            // Create heading
+            const heading = document.createElement('h4');
+            heading.textContent = category;
+            heading.className = 'mb-3';
+            categoryDiv.appendChild(heading);
+            
+            // Create canvas for chart
+            const canvas = document.createElement('canvas');
+            canvas.id = `skillChart${index}`;
+            categoryDiv.appendChild(canvas);
+            
+            // Add to container
+            skillCategoriesContainer.appendChild(categoryDiv);
+            
+            // Extract data for this category
+            const skills = skillData[category];
+            const labels = skills.map(skill => skill.name);
+            const data = skills.map(skill => skill.proficiency);
+            
+            // Create chart
+            const ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${category} Skills`,
+                        data: data,
+                        backgroundColor: 'rgba(67, 97, 238, 0.8)',
+                        borderColor: 'rgba(67, 97, 238, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Project Timeline (using Plotly)
+        const timelineData = [
+            {
+                x: ['2020-01', '2020-03'],
+                y: ['Data Visualization Dashboard'],
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(67, 97, 238, 0.8)'
+                }
+            },
+            {
+                x: ['2020-04', '2020-07'],
+                y: ['Customer Segmentation Model'],
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(76, 201, 240, 0.8)'
+                }
+            },
+            {
+                x: ['2020-08', '2020-12'],
+                y: ['Predictive Maintenance System'],
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(63, 55, 201, 0.8)'
+                }
+            },
+            {
+                x: ['2021-01', '2021-05'],
+                y: ['Natural Language Processing Tool'],
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(247, 37, 133, 0.8)'
+                }
+            },
+            {
+                x: ['2021-06', '2021-12'],
+                y: ['Recommendation Engine'],
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(58, 134, 255, 0.8)'
+                }
+            }
+        ];
+        
+        const timelineLayout = {
+            title: 'Project Timeline',
+            xaxis: {
+                title: 'Date',
+                type: 'date'
+            },
+            yaxis: {
+                title: 'Project',
+                automargin: true
+            },
+            margin: {
+                l: 250
+            },
+            height: 350,
+            autosize: true
+        };
+        
+        Plotly.newPlot('projectTimeline', timelineData, timelineLayout, {responsive: true});
+        
+        // Skills Correlation Heatmap (simulated data)
+        const heatmapData = [
+            {
+                z: [
+                    [1.0, 0.8, 0.6, 0.4, 0.7],
+                    [0.8, 1.0, 0.5, 0.3, 0.6],
+                    [0.6, 0.5, 1.0, 0.7, 0.4],
+                    [0.4, 0.3, 0.7, 1.0, 0.5],
+                    [0.7, 0.6, 0.4, 0.5, 1.0]
+                ],
+                x: ['Python', 'R', 'SQL', 'ML', 'Viz'],
+                y: ['Python', 'R', 'SQL', 'ML', 'Viz'],
+                type: 'heatmap',
+                colorscale: 'Blues'
+            }
+        ];
+        
+        const heatmapLayout = {
+            title: 'Skills Correlation',
+            height: 300,
+            margin: {
+                l: 50,
+                r: 50,
+                b: 50,
+                t: 50,
+                pad: 4
+            }
+        };
+        
+        Plotly.newPlot('skillsHeatmap', heatmapData, heatmapLayout, {responsive: true});
+        
+        // Learning Progress Line Chart (simulated data)
+        const learningCtx = document.getElementById('learningProgressChart').getContext('2d');
+        const learningProgressChart = new Chart(learningCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Machine Learning',
+                        data: [65, 68, 70, 72, 75, 78, 80, 82, 85, 87, 88, 90],
+                        borderColor: 'rgba(67, 97, 238, 1)',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Deep Learning',
+                        data: [40, 42, 45, 50, 55, 58, 62, 65, 68, 70, 72, 75],
+                        borderColor: 'rgba(76, 201, 240, 1)',
+                        backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 
