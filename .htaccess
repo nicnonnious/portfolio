@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /app.py/$1 [L]
+
+<IfModule mod_wsgi.c>
+    WSGIScriptAlias / /app.py
+    WSGIDaemonProcess portfolio python-path=/path/to/your/virtualenv/lib/python3.10/site-packages
+    WSGIProcessGroup portfolio
+</IfModule> 

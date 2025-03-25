@@ -1,5 +1,5 @@
 # Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy Flask App to GoDaddy
 
 on:
   # Runs on pushes targeting the default branch
@@ -10,30 +10,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: https://nicnonnious.github.io/portfolio/
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install gunicorn
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          cp -r app.py requirements.txt static templates deploy/
+          echo "gunicorn app:app" > deploy/start.sh
+          chmod +x deploy/start.sh
+
+      - name: Create deployment archive
+        run: |
+          cd deploy
+          zip -r ../deploy.zip ./*
