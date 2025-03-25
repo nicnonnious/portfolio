@@ -7,4 +7,9 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
-    healthCheckPath: / 
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: "true"
+    healthCheckPath: /
+    autoDeploy: true 
