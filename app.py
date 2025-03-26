@@ -3,8 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 import os
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+# Add ProxyFix middleware to handle HTTPS properly
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 
 # Simple configuration without additional middleware
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///portfolio.db'
