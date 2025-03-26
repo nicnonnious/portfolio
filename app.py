@@ -3,31 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 import os
-from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 
-# Configure ProxyFix with all options for complete proxy handling
-app.wsgi_app = ProxyFix(
-    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
-)
-
-# Security headers for HTTPS
-@app.after_request
-def add_security_headers(response):
-    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    response.headers['X-XSS-Protection'] = '1; mode=block'
-    return response
-
-# Force HTTPS redirect
-@app.before_request
-def before_request():
-    if request.headers.get('X-Forwarded-Proto') == 'http':
-        url = request.url.replace('http://', 'https://', 1)
-        return redirect(url, code=301)
-
+# Simple configuration without additional middleware
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///portfolio.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True  # Disable template caching
