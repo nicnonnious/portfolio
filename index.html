@@ -415,6 +415,32 @@
             font-weight: bold;
         }
 
+        .project-links {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .project-link:hover {
+            background: var(--accent-blue);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
         /* Projects Grid */
         .projects-grid {
             display: grid;
@@ -663,7 +689,7 @@
                 <h1 class="hero-title">Nicodemus N Mapogha</h1>
                 <p class="hero-subtitle">Lead AI Developer & Computer Vision Specialist</p>
                 <p class="hero-description">
-                    Building enterprise-grade AI systems that transform businesses. Specializing in computer vision, 
+                    Building AI systems that transform businesses. Specializing in computer vision, 
                     machine learning, and real-time video intelligence for next-generation security and automation solutions.
                 </p>
                 <div class="hero-cta">
@@ -680,7 +706,7 @@
                 <div class="stat-label">Years Experience</div>
             </div>
             <div class="stat-item">
-                <span class="stat-number">15+</span>
+                <span class="stat-number">5</span>
                 <div class="stat-label">AI Projects Delivered</div>
             </div>
             <div class="stat-item">
@@ -688,7 +714,7 @@
                 <div class="stat-label">Model Accuracy</div>
             </div>
             <div class="stat-item">
-                <span class="stat-number">50+</span>
+                <span class="stat-number">15+</span>
                 <div class="stat-label">Enterprise Clients</div>
             </div>
         </section>
@@ -716,7 +742,7 @@
                             Spearheading the development of cutting-edge Video Management Systems with real-time AI capabilities
                         </div>
                         <ul class="achievements">
-                            <li>Architected and deployed 8+ specialized computer vision models (Person/Gun/Vehicle Detection, Geofencing, Behavioral Analysis) achieving 95%+ accuracy for enterprise security applications</li>
+                            <li>Architected and deployed 8+ specialized computer vision models (Person/Gun/Vehicle Detection, Geofencing, Behavioral Analysis) achieving 95%+ accuracy for the VMS</li>
                             <li>Built end-to-end ML pipeline processing 100TB+ video data monthly with real-time inference and automated model validation against live CCTV footage</li>
                             <li>Developed comprehensive Python scripts for model testing and validation, facilitating seamless integration into the core VMS architecture</li>
                             <li>Designed and implemented dynamic dashboards for diverse use cases, providing real-time insights into AI-generated events, system performance, and operational logs</li>
@@ -739,7 +765,7 @@
                             Bridging academic research with enterprise-level technology implementations
                         </div>
                         <ul class="achievements">
-                            <li>Architected enterprise technology solutions across multiple university departments</li>
+                            <li>Architected technology solutions across multiple university departments</li>
                             <li>Improved help desk department efficiency by 40% through automating the reporting system</li>
                             <li>Managed IT infrastructure supporting 5,000+ students and faculty with 99.9% uptime</li>
                             <li>Led security protocol implementations and application administration</li>
@@ -782,7 +808,7 @@
             <div class="projects-grid">
                 <div class="project-card fade-in">
                     <div class="project-header">
-                        <h3 class="project-title">Enterprise VMS AI Platform</h3>
+                        <h3 class="project-title">MDI AI Detection VMS Platform</h3>
                         <span class="project-year">2025</span>
                     </div>
                     <p class="project-description">
@@ -801,8 +827,11 @@
                         <li>95%+ accuracy across all detection models</li>
                         <li>Sub-100ms real-time processing latency</li>
                         <li>80% reduction in false positive alerts</li>
-                        <li>Serving 50+ enterprise clients</li>
+                        <li>Serving 15+ enterprise clients</li>
                     </ul>
+                    <div class="project-links">
+                        <a href="https://mdiaidetection.com/" target="_blank" class="project-link">Visit Project →</a>
+                    </div>
                 </div>
 
                 <div class="project-card fade-in">
