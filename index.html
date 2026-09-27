@@ -1,1192 +1,935 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nicodemus N Mapogha - Lead AI Developer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-dark: #0a0a0a;
-            --secondary-dark: #1a1a1a;
-            --accent-dark: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --text-muted: #666666;
-            --accent-blue: #0066ff;
-            --accent-green: #00ff88;
-            --accent-purple: #6366f1;
-            --border-subtle: #333333;
-            --code-bg: #161616;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--primary-dark);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Neural Network Background Animation */
-        .neural-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        .node {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--accent-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-blue);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .connection {
-            position: absolute;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.6), transparent);
-            animation: flow 4s linear infinite;
-            box-shadow: 0 0 4px rgba(0, 102, 255, 0.3);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.8); }
-        }
-
-        @keyframes flow {
-            0% { opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0; }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-subtle);
-            z-index: 1000;
-            padding: 1rem 0;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 400;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-blue);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding-top: 80px;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--secondary-dark);
-            border: 1px solid var(--border-subtle);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 400;
-        }
-
-        .hero-description {
-            font-size: 1.125rem;
-            color: var(--text-muted);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            line-height: 1.7;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.875rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #0052cc;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .btn-secondary:hover {
-            background: var(--secondary-dark);
-            border-color: var(--text-secondary);
-        }
-
-        /* Stats Section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 6rem 0;
-            padding: 3rem 0;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-            display: block;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Section Styling */
-        .section {
-            padding: 6rem 0;
-        }
-
-        .section-header {
-            max-width: 800px;
-            margin: 0 auto 4rem;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
-
-        .section-subtitle {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Experience Timeline */
-        .timeline {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--border-subtle);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 60px;
-            margin-bottom: 4rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 11px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-blue);
-            border-radius: 50%;
-            border: 4px solid var(--primary-dark);
-        }
-
-        .timeline-content {
-            background: var(--secondary-dark);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .timeline-content::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 20px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 8px 8px 8px 0;
-            border-color: transparent var(--border-subtle) transparent transparent;
-        }
-
-        .timeline-content::after {
-            content: '';
-            position: absolute;
-            left: -7px;
-            top: 20px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 8px 8px 8px 0;
-            border-color: transparent var(--secondary-dark) transparent transparent;
-        }
-
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .job-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .job-company {
-            color: var(--accent-blue);
-            font-weight: 500;
-        }
-
-        .job-period {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            background: var(--accent-dark);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-
-        .job-description {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            font-style: italic;
-        }
-
-        .achievements {
-            list-style: none;
-        }
-
-        .achievements li {
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .achievements li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--accent-blue);
-            font-weight: bold;
-        }
-
-        .project-links {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--accent-blue);
-            border-radius: 6px;
-            background: rgba(0, 102, 255, 0.1);
-        }
-
-        .project-link:hover {
-            background: var(--accent-blue);
-            color: var(--text-primary);
-            transform: translateX(4px);
-        }
-
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .project-card {
-            background: var(--secondary-dark);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-blue);
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .project-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .project-year {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            background: var(--accent-dark);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .tech-tag {
-            background: var(--code-bg);
-            color: var(--accent-green);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            border: 1px solid var(--border-subtle);
-        }
-
-        /* Skills Grid */
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .skill-category {
-            background: var(--secondary-dark);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 2rem;
-        }
-
-        .skill-category h3 {
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .skill-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .skill-item {
-            background: var(--code-bg);
-            color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            border: 1px solid var(--border-subtle);
-            transition: all 0.3s ease;
-        }
-
-        .skill-item:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-        }
-
-        /* Contact Section */
-        .contact {
-            background: var(--secondary-dark);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-            margin: 4rem 0;
-        }
-
-        .contact-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .contact-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-size: 1.125rem;
-        }
-
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .contact-item:hover {
-            color: var(--accent-blue);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .skills-container {
-                grid-template-columns: 1fr;
-            }
-
-            .timeline-item {
-                padding-left: 40px;
-            }
-
-            .timeline::before {
-                left: 10px;
-            }
-
-            .timeline-item::before {
-                left: 1px;
-                width: 18px;
-                height: 18px;
-            }
-        }
-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Loading animation */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nicodemus Mapogha | Edge AI Video Engineer</title>
+<meta name="description" content="Nicodemus Mapogha builds production computer vision systems that run on GPUs at the edge and scale in the cloud. Live, in-browser demonstrations of real engineering.">
+<meta property="og:title" content="Nicodemus Mapogha | Edge AI Video Engineer">
+<meta property="og:description" content="Real-time detection, multi-camera tracking and forensic video search. See it running, right in the page.">
+<meta property="og:url" content="https://nicmapogha.com/">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preload" href="fonts/inter-tight-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-tight-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-tight-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jetbrains-mono-latin-500-normal.woff2) format('woff2')}
+:root{
+  color-scheme:dark;
+  --bg:#0a0a0a; --bg2:#0f0f0f; --panel:#111111; --panel2:#161616; --line:#222222; --line2:#333333;
+  --text:#ffffff; --text2:#c9c9c9; --muted:#a0a0a0; --dim:#666666;
+  --blue:#0066ff; --blue-hi:#3d8bff; --cyan:#3d8bff; --green:#00ff88; --amber:#ffb547; --red:#ff4d5e; --violet:#6366f1; --violet-hi:#8b8ef7;
+  --r:12px; --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; --disp:'Inter Tight','Inter',-apple-system,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);position:relative;font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+abbr{text-decoration:underline dotted var(--dim);text-underline-offset:3px;cursor:help}
+::selection{background:var(--blue);color:#fff}
+.mono{font-family:var(--mono)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* living background */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+.bg-veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 700px at 70% -10%,rgba(0,102,255,.16),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(99,102,241,.08),transparent 60%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+header,section,footer,.facts{position:relative;z-index:2}
+nav{z-index:50}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(10,10,10,.8);backdrop-filter:blur(16px) saturate(140%);border-color:var(--line)}
+.brand{font-family:var(--disp);font-weight:600;font-size:16px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.navlinks{display:flex;gap:26px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted);transition:color .2s}
+.navlinks a:hover{color:var(--text)}
+@media(max-width:760px){.navlinks{display:none}}
+
+/* hero */
+#hero{position:relative;padding:128px 0 88px}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"top vms" "body vms";column-gap:56px;row-gap:0;align-items:end;max-width:1320px}
+.h-top{grid-area:top}.h-body{grid-area:body;align-self:start}.h-vms{grid-area:vms;align-self:center}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:10px;padding:6px 12px 6px 10px;border:1px solid var(--line2);border-radius:6px;background:rgba(17,17,17,.7)}
+.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(0,255,136,.15)}
+h1{font-family:var(--disp);font-weight:600;font-size:clamp(42px,5.4vw,78px);line-height:1;letter-spacing:-.035em;margin:22px 0 24px;text-wrap:balance}
+h1 .grad{color:var(--blue)}
+.lede{max-width:500px;color:var(--text2);font-size:clamp(16px,1.35vw,18px)}
+.cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.btn{font:500 14px var(--sans);padding:12px 20px;border-radius:8px;text-decoration:none;border:1px solid var(--line2);background:rgba(17,17,17,.75);color:var(--text);cursor:pointer;transition:transform .2s,border-color .2s,background .2s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:#555;background:#1a1a1a}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.primary:hover{background:#1a75ff;border-color:#1a75ff}
+
+/* video wall */
+.vms{background:#0d0d0d;border:1px solid var(--line2);border-radius:12px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 50px 100px -40px rgba(0,0,0,.95),0 30px 60px -30px rgba(0,102,255,.18)}
+.vms-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--line)}
+.vms-bar .l{display:flex;align-items:center;gap:10px;min-width:0;white-space:nowrap;overflow:hidden}
+.rec{display:inline-flex;align-items:center;gap:6px;color:var(--red);letter-spacing:.08em}
+.rec::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 1.6s infinite}
+.feed{position:relative;background:#000;overflow:hidden}
+.feed video{display:block;width:100%;height:100%;object-fit:cover}
+.feed canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.feed.main{aspect-ratio:16/9}
+.feed .osd{position:absolute;left:10px;top:8px;font-family:var(--mono);font-size:11px;color:#fff;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.8);letter-spacing:.04em;pointer-events:none}
+.feed .tag{position:absolute;right:8px;bottom:8px;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(10,10,10,.78);border:1px solid var(--line2);color:var(--text);backdrop-filter:blur(6px);pointer-events:none;transition:all .25s}
+.feed .tag.alert{background:rgba(255,77,94,.9);border-color:var(--red);color:#fff}
+.feed .tag.ok{color:var(--green)}
+.vms-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.vms-stats div{padding:10px 14px;border-right:1px solid var(--line);min-width:0}
+.vms-stats div:last-child{border-right:0}
+.vms-stats span{display:block;font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.vms-stats b{font-family:var(--mono);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums}
+.wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;background:var(--line)}
+.wall .feed{aspect-ratio:16/9}
+.wall .osd{font-size:9.5px;left:8px;top:6px}
+.vms-foot{display:flex;align-items:center;gap:12px;padding:12px 14px;flex-wrap:wrap}
+.vms-foot .btn{padding:9px 16px;font-size:13px}
+.live-note{font-family:var(--mono);font-size:11px;color:var(--muted);flex:1;min-width:200px}
+.live-note b{color:var(--text);font-weight:500}
+.credit{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:10px}
+.credit a{color:var(--muted)}
+@media(max-width:980px){.hero-grid{grid-template-columns:1fr;grid-template-areas:"top" "vms" "body";row-gap:28px}#hero{padding:96px 0 56px}}
+@media(max-width:560px){.vms-stats{grid-template-columns:1fr 1fr}.vms-stats div:nth-child(2){border-right:0}.vms-stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}.hide-sm{display:none}.wall .osd{font-size:8.5px}.wall .sub{display:none}.feed.main .osd .dt{display:none}.feed .tag{font-size:8.5px;padding:2px 6px}.wall .tag{right:4px;bottom:4px}}
+
+/* facts strip */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fact{padding:30px 24px;border-right:1px solid var(--line);background:rgba(10,10,10,.6)}
+.fact:last-child{border-right:0}
+.fact .n{font-family:var(--disp);font-size:clamp(26px,3vw,38px);font-weight:600;letter-spacing:-.04em}
+.fact .l{color:var(--muted);font-size:13.5px;margin-top:4px}
+@media(max-width:860px){.facts{grid-template-columns:1fr 1fr}.fact:nth-child(2){border-right:0}.fact:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* sections */
+section{padding:120px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:end;margin-bottom:44px}
+.sec-head h2{font-family:var(--disp);font-size:clamp(32px,4vw,52px);line-height:1.04;letter-spacing:-.03em;font-weight:600;text-wrap:balance}
+.sec-head p{color:var(--muted);max-width:520px;font-size:16.5px}
+.idx{font-family:var(--mono);font-size:12px;color:var(--blue-hi);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.idx::before{content:"";width:6px;height:6px;background:var(--blue)}
+@media(max-width:860px){.sec-head{grid-template-columns:1fr;gap:16px}section{padding:84px 0}}
+
+.demo{background:rgba(17,17,17,.92);border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;position:relative;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 40px 80px -40px rgba(0,0,0,.9);backdrop-filter:blur(6px)}
+.demo-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);flex-wrap:wrap}
+.demo-bar .live{display:flex;align-items:center;gap:8px}
+.demo-bar .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(0,255,136,.15)}
+.note{font-size:12.5px;color:var(--dim);margin-top:14px;font-family:var(--mono)}
+.chip{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border:1px solid var(--line2);border-radius:6px;color:var(--muted);background:var(--bg2);cursor:pointer;transition:all .2s}
+.chip:hover{border-color:#555;color:var(--text)}
+.chip.on{border-color:var(--blue);color:#fff;background:rgba(0,102,255,.14)}
+
+/* hub-edge */
+.he{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+#heCanvas{width:100%;height:440px;display:block}
+.log{border-left:1px solid var(--line);font-family:var(--mono);font-size:11.5px;padding:14px;height:440px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;color:var(--muted);mask-image:linear-gradient(0deg,#000 70%,transparent)}
+.log div{flex-shrink:0;line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .t-ev{color:var(--green)} .log .t-hb{color:var(--dim)} .log .t-md{color:var(--violet)} .log .t-wal{color:var(--amber)} .log .t-err{color:var(--red)}
+@media(max-width:860px){.he{grid-template-columns:1fr}.log{border-left:0;border-top:1px solid var(--line);height:200px}#heCanvas{height:340px}}
+
+/* capacity */
+.cap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)}
+.cap-ctl{padding:24px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:22px}
+.cap-ctl label{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:10px}
+.gpus{display:flex;flex-wrap:wrap;gap:8px}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.big{font-family:var(--disp);font-size:58px;font-weight:600;line-height:1;letter-spacing:-.05em}
+.big small{font-size:15px;color:var(--muted);font-family:var(--sans);font-weight:400;letter-spacing:0;margin-left:8px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kv span{display:block;font-family:var(--mono);font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.kv b{font-family:var(--mono);font-weight:500;font-size:15px}
+#capCanvas{width:100%;height:100%;min-height:420px;display:block}
+@media(max-width:860px){.cap{grid-template-columns:1fr}.cap-ctl{border-right:0;border-bottom:1px solid var(--line)}#capCanvas{min-height:340px}}
+
+/* forensic */
+.fs-search{display:flex;gap:10px;padding:18px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.fs-search input{flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:13px 16px;color:var(--text);font:15px var(--sans);outline:none;transition:border-color .2s}
+.fs-search input:focus{border-color:var(--blue)}
+.fs-sugg{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 16px;border-bottom:1px solid var(--line);padding-top:0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s,border-color .3s,box-shadow .3s,filter .4s}
+.card .ph{position:relative;aspect-ratio:16/10;overflow:hidden;background:#000}
+.card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.card:hover img{transform:scale(1.04)}
+.card .bx{position:absolute;border:1.5px solid var(--green);border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.35);transition:border-color .3s}
+.card .bx i{position:absolute;left:-1.5px;top:-17px;font:500 9.5px var(--mono);font-style:normal;background:var(--green);color:#002914;padding:1px 5px;border-radius:2px 2px 2px 0;white-space:nowrap}
+.card .meta{padding:9px 11px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;white-space:nowrap}
+.card .meta>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.card .meta b{color:var(--text);font-weight:500}
+.card .bar{height:3px;background:var(--line)}
+.card .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .6s}
+.card.hit{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 20px 40px -20px rgba(0,102,255,.55)}
+.card.hit .bx{border-color:var(--blue)} .card.hit .bx i{background:var(--blue);color:#fff}
+.card.miss{opacity:.32;filter:grayscale(.7)}
+@media(max-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* pipeline */
+.pipe{padding:28px 22px}
+.steps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;position:relative}
+.step{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 12px;min-height:128px;transition:border-color .3s,background .3s,transform .3s}
+.step .k{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.step h4{font-family:var(--disp);font-size:15.5px;font-weight:600;letter-spacing:-.02em;margin:6px 0 6px;line-height:1.2}
+.step p{font-size:12px;color:var(--muted);line-height:1.45}
+.step.ok{border-color:rgba(0,255,136,.55);background:rgba(0,255,136,.05)}
+.step.run{border-color:var(--blue);background:rgba(0,102,255,.08)}
+.step.fail{border-color:var(--red);background:rgba(255,77,94,.08)}
+.step.gate{border-style:dashed}
+.pipe-ctl{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;align-items:center}
+.pipe-status{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-left:auto}
+@media(max-width:980px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.pipe-status{margin-left:0;width:100%}}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.proj{grid-column:span 2;background:rgba(17,17,17,.92);border:1px solid var(--line);border-radius:var(--r);padding:26px;position:relative;overflow:hidden;transition:border-color .3s,background .3s}
+.proj:hover{border-color:var(--line2);background:#141414}
+.proj.wide{grid-column:span 3}
+.proj .tag{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.proj h3{font-family:var(--disp);font-size:24px;font-weight:600;margin:10px 0 8px;letter-spacing:-.02em}
+.proj p{color:var(--muted);font-size:14.5px}
+.proj ul{list-style:none;margin-top:14px;display:grid;gap:6px}
+.proj li{font-size:13.5px;color:var(--text2);padding-left:16px;position:relative}
+.proj li::before{content:"";position:absolute;left:0;top:.6em;width:5px;height:5px;background:var(--blue)}
+.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.stack span{font-family:var(--mono);font-size:10.5px;color:var(--green);border:1px solid var(--line2);border-radius:4px;padding:3px 7px;background:#161616}
+.proj a.more{display:inline-block;margin-top:16px;font-size:13.5px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line2)}
+.proj a.more:hover{border-color:var(--blue);color:var(--blue-hi)}
+@media(max-width:980px){.proj,.proj.wide{grid-column:span 3}}
+@media(max-width:680px){.proj,.proj.wide{grid-column:span 6}}
+
+/* experience */
+.xp{display:grid;gap:0;border-top:1px solid var(--line)}
+.job{display:grid;grid-template-columns:200px minmax(0,1fr);gap:36px;padding:32px 0;border-bottom:1px solid var(--line)}
+.job .when{font-family:var(--mono);font-size:12.5px;color:var(--dim)}
+.job h3{font-family:var(--disp);font-size:24px;font-weight:600;letter-spacing:-.02em}
+.job .org{color:var(--blue-hi);font-size:14.5px;margin:2px 0 12px}
+.job ul{list-style:none;display:grid;gap:7px}
+.job li{color:var(--text2);font-size:15px;padding-left:18px;position:relative}
+.job li::before{content:"";position:absolute;left:2px;top:.65em;width:5px;height:5px;background:var(--blue)}
+@media(max-width:760px){.job{grid-template-columns:1fr;gap:8px}}
+
+/* stack */
+.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sk{background:rgba(17,17,17,.92);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.sk h4{font-family:var(--disp);font-size:16px;font-weight:600;letter-spacing:-.02em;color:var(--text);margin-bottom:14px}
+.sk div{display:flex;flex-wrap:wrap;gap:6px}
+.sk span{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border-radius:4px;background:#161616;border:1px solid var(--line2);color:var(--green)}
+@media(max-width:980px){.skills{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.skills{grid-template-columns:1fr}}
+
+/* contact */
+#contact{text-align:center;padding:140px 0 110px;position:relative;overflow:hidden}
+#contact h2{font-family:var(--disp);font-size:clamp(38px,6vw,76px);letter-spacing:-.035em;line-height:1.02;font-weight:600;max-width:14ch;margin:0 auto 22px}
+#contact p{color:var(--muted);max-width:520px;margin:0 auto 34px}
+#contact .cta{justify-content:center}
+#contact .idx{justify-content:center}
+footer{border-top:1px solid var(--line);padding:26px 24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-    <!-- Neural Network Background -->
-    <div class="neural-bg" id="neuralBg"></div>
+<canvas id="bg" aria-hidden="true"></canvas><div class="bg-veil" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">N. Mapogha</a>
-            <ul class="nav-links">
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+<nav id="nav">
+  <a class="brand" href="#hero"><span class="dot"></span>nicmapogha</a>
+  <div class="navlinks">
+    <a href="#demos">Live demos</a>
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ============ HERO: real footage, real detections ============ -->
+<header id="hero">
+  <div class="wrap hero-grid">
+    <div class="h-top">
+      <div class="eyebrow">Lead AI Engineer · Tampa Bay, FL</div>
+      <h1>I teach cameras to <span class="grad">understand</span> what they see.</h1>
+    </div>
+    <div class="h-body">
+      <p class="lede">Nicodemus Mapogha. 12+ years taking video AI from prototype to production: GPU inference at the edge, fleets managed from the cloud, and forensic search across thousands of camera streams.</p>
+      <p class="lede" style="margin-top:14px;color:var(--muted);font-size:15px">This camera wall is real footage. Every box, track, zone alert and count comes from a YOLOv8 detector and a multi-object tracker. Press the button and the model runs on your own device.</p>
+      <div class="cta">
+        <a class="btn primary" href="#demos">See the engineering ↓</a>
+        <a class="btn" href="#contact">Start a project</a>
+      </div>
+    </div>
+    <div class="h-vms">
+      <div class="vms" id="vms">
+        <div class="vms-bar">
+          <div class="l"><span class="rec">REC</span><span class="hide-sm">edge appliance · 4 cameras</span></div>
+          <span id="vmsMode">YOLOv8n · tracking</span>
         </div>
-    </nav>
+        <div class="feed main" data-feed="aisle">
+          <video poster="media/aisle.jpg" muted playsinline loop preload="auto"><source src="media/aisle.webm" type="video/webm"><source src="media/aisle.mp4" type="video/mp4"></video>
+          <canvas></canvas>
+          <div class="osd">CAM 01 · RETAIL AISLE · <span class="clk"></span></div>
+          <div class="tag" data-tag></div>
+        </div>
+        <div class="vms-stats">
+          <div><span>in view</span><b id="stView">0</b></div>
+          <div><span>avg dwell</span><b id="stDwell">0.0 s</b></div>
+          <div><span>unique tracks</span><b id="stUniq">0</b></div>
+          <div><span>inference</span><b id="stInf">precomputed</b></div>
+        </div>
+        <div class="wall">
+          <div class="feed" data-feed="warehouse"><video poster="media/warehouse.jpg" muted playsinline loop preload="metadata"><source src="media/warehouse.webm" type="video/webm"><source src="media/warehouse.mp4" type="video/mp4"></video><canvas></canvas><div class="osd">CAM 02<span class="sub"> · RESTRICTED ZONE</span></div><div class="tag" data-tag></div></div>
+          <div class="feed" data-feed="lot"><video poster="media/lot.jpg" muted playsinline loop preload="metadata"><source src="media/lot.webm" type="video/webm"><source src="media/lot.mp4" type="video/mp4"></video><canvas></canvas><div class="osd">CAM 03<span class="sub"> · LINE COUNT</span></div><div class="tag" data-tag></div></div>
+          <div class="feed" data-feed="hallway"><video poster="media/hallway.jpg" muted playsinline loop preload="metadata"><source src="media/hallway.webm" type="video/webm"><source src="media/hallway.mp4" type="video/mp4"></video><canvas></canvas><div class="osd">CAM 04<span class="sub"> · OCCUPANCY</span></div><div class="tag" data-tag></div></div>
+        </div>
+        <div class="vms-foot">
+          <button class="btn primary" id="liveBtn" type="button">Run YOLOv8 on your device</button>
+          <span class="live-note" id="liveNote">Downloads a 12 MB model once, then detects on CAM 01 in your browser with WebAssembly.</span>
+        </div>
+      </div>
+      <div class="credit">Footage: Intel IoT DevKit sample videos, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</div>
+    </div>
+  </div>
+</header>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content fade-in">
-                <div class="hero-badge">
-                    <div class="status-dot"></div>
-                    Available for new opportunities
-                </div>
-                <h1 class="hero-title">Nicodemus N Mapogha</h1>
-                <p class="hero-subtitle">Lead AI Developer & Computer Vision Specialist</p>
-                <p class="hero-description">
-                    Building AI systems that transform businesses. Specializing in computer vision, 
-                    machine learning, and real-time video intelligence for next-generation security and automation solutions.
-                </p>
-                <div class="hero-cta">
-                    <a href="#contact" class="btn btn-primary">Start a Project</a>
-                    <a href="#experience" class="btn btn-secondary">View Experience</a>
-                </div>
-            </div>
-        </section>
+<div class="facts wrap" style="padding:0">
+  <div class="fact"><div class="n">5 → 30</div><div class="l">frames per second, adapting to scene motion so idle cameras cost almost nothing</div></div>
+  <div class="fact"><div class="n">1 codebase</div><div class="l">three deployment modes: cloud hub, on-site edge appliance, all-in-one</div></div>
+  <div class="fact"><div class="n">Turing → Blackwell</div><div class="l">GPU generations running the same DeepStream pipeline in the field</div></div>
+  <div class="fact"><div class="n">0 lost events</div><div class="l">when the internet drops: edge devices journal locally and replay on reconnect</div></div>
+</div>
 
-        <!-- Stats Section -->
-        <section class="stats fade-in">
-            <div class="stat-item">
-                <span class="stat-number">6+</span>
-                <div class="stat-label">Years Experience</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">5</span>
-                <div class="stat-label">AI Projects Delivered</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">95%</span>
-                <div class="stat-label">Model Accuracy</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">15+</span>
-                <div class="stat-label">Enterprise Clients</div>
-            </div>
-        </section>
+<!-- ============ DEMOS ============ -->
+<section id="demos">
+  <div class="wrap">
 
-        <!-- Experience Section -->
-        <section id="experience" class="section">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Professional Experience</h2>
-                <p class="section-subtitle">
-                    Leading AI innovation across healthcare, telecommunications, education, and security industries
-                </p>
-            </div>
+    <div class="sec-head reveal">
+      <div><span class="idx">Edge resilience</span><h2>The internet goes down. The alarms still arrive.</h2></div>
+      <p>Each customer site runs a GPU appliance that does the seeing. A cloud hub does the managing. They talk over an encrypted <abbr title="WireGuard virtual private network">WireGuard</abbr> tunnel using <abbr title="Message Queuing Telemetry Transport">MQTT</abbr>. Click a site to cut its link and watch it keep a write-ahead log, then replay every event the moment it reconnects.</p>
+    </div>
+    <div class="demo reveal">
+      <div class="demo-bar"><span class="live">hub ⇄ 3 edge sites</span><span id="heStat">all links up</span></div>
+      <div class="he">
+        <canvas id="heCanvas" aria-label="Animated diagram of edge devices streaming events to a cloud hub"></canvas>
+        <div class="log" id="heLog" aria-live="off"></div>
+      </div>
+    </div>
+    <p class="note">Simplified visual of the MDIX hub and edge protocol: event sync, 60-second heartbeats, media push and offline journaling.</p>
 
-            <div class="timeline">
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="job-header">
-                            <div>
-                                <div class="job-title">Lead AI Developer</div>
-                                <div class="job-company">MDI AI Detection</div>
-                            </div>
-                            <div class="job-period">Jan 2025 - Present</div>
-                        </div>
-                        <div class="job-description">
-                            Spearheading the development of cutting-edge Video Management Systems with real-time AI capabilities
-                        </div>
-                        <ul class="achievements">
-                            <li>Architected and deployed 8+ specialized computer vision models (Person/Gun/Vehicle Detection, Geofencing, Behavioral Analysis) achieving 95%+ accuracy for the VMS</li>
-                            <li>Built end-to-end ML pipeline processing 100TB+ video data monthly with real-time inference and automated model validation against live CCTV footage</li>
-                            <li>Developed comprehensive Python scripts for model testing and validation, facilitating seamless integration into the core VMS architecture</li>
-                            <li>Designed and implemented dynamic dashboards for diverse use cases, providing real-time insights into AI-generated events, system performance, and operational logs</li>
-                            <li>Leveraged extensive data science knowledge to architect and optimize data cleaning pipelines from various sources, ensuring data quality and integrity for model training</li>
-                            <li>Automated critical processes including model training, validation, and deployment, significantly improving efficiency and reducing time-to-market for new features</li>
-                        </ul>
-                    </div>
-                </div>
+    <div style="height:120px"></div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="job-header">
-                            <div>
-                                <div class="job-title">Graduate Assistant, Information Technology</div>
-                                <div class="job-company">Lewis University</div>
-                            </div>
-                            <div class="job-period">Aug 2023 - Present</div>
-                        </div>
-                        <div class="job-description">
-                            Bridging academic research with enterprise-level technology implementations
-                        </div>
-                        <ul class="achievements">
-                            <li>Architected technology solutions across multiple university departments</li>
-                            <li>Improved help desk department efficiency by 40% through automating the reporting system</li>
-                            <li>Managed IT infrastructure supporting 5,000+ students and faculty with 99.9% uptime</li>
-                            <li>Led security protocol implementations and application administration</li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="sec-head reveal">
+      <div><span class="idx">GPU capacity</span><h2>How many cameras fit on one GPU?</h2></div>
+      <p>Frames from every camera are gathered into a 50 millisecond window and sent to the GPU as one batch. Pick a card from our field fleet and set how busy the scenes are. The planner sizes camera capacity from video memory, and the right side shows the batching live.</p>
+    </div>
+    <div class="demo reveal">
+      <div class="demo-bar"><span class="live">capacity planner</span><span>batched inference · 50 ms window · max batch 24</span></div>
+      <div class="cap">
+        <div class="cap-ctl">
+          <div><label>GPU</label><div class="gpus" id="gpus"></div></div>
+          <div><div class="big" id="capCams">44<small>cameras</small></div><div class="note" id="capNote" style="margin-top:8px"></div></div>
+          <div>
+            <label>Share of cameras with motion: <span id="actVal" class="mono" style="color:var(--text)">30%</span></label>
+            <input type="range" id="act" min="0" max="100" value="30" aria-label="Share of cameras seeing motion">
+          </div>
+          <div class="kv">
+            <div><span>frames / sec</span><b id="kvFps">0</b></div>
+            <div><span>batches / sec</span><b id="kvBps">0</b></div>
+            <div><span>avg batch</span><b id="kvBatch">0</b></div>
+            <div><span>vs. fixed 30 FPS</span><b id="kvSave">0%</b></div>
+          </div>
+        </div>
+        <canvas id="capCanvas" aria-label="Animated view of camera frames being batched into GPU inference"></canvas>
+      </div>
+    </div>
+    <p class="note">Planner uses the fleet rule of roughly 2.8 cameras per GiB of video memory. Idle cameras run at 5 FPS, cameras with motion at 15 FPS.</p>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="job-header">
-                            <div>
-                                <div class="job-title">Network Operations Center Engineer (Team Leader)</div>
-                                <div class="job-company">Viettel Telecom Company</div>
-                            </div>
-                            <div class="job-period">May 2018 - Dec 2022</div>
-                        </div>
-                        <div class="job-description">
-                            Led network operations serving 15M+ subscribers across Tanzania's largest telecom network
-                        </div>
-                        <ul class="achievements">
-                            <li>Managed team of 12 engineers maintaining 24/7 network operations</li>
-                            <li>Reduced network downtime by 45% through proactive monitoring systems</li>
-                            <li>Led infrastructure upgrades improving system capacity by 200%</li>
-                            <li>Recipient of Technical Employee of the Year award (2021)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div style="height:120px"></div>
 
-        <!-- Projects Section -->
-        <section id="projects" class="section">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">
-                    Innovative AI solutions solving real-world challenges across industries
-                </p>
-            </div>
+    <div class="sec-head reveal">
+      <div><span class="idx">Forensic search</span><h2>Search hours of footage by describing it.</h2></div>
+      <p>Investigators do not want to scrub video. In MDI Veritas every detection is turned into a vector with a vision language model, stored in PostgreSQL with <abbr title="vector similarity search extension for PostgreSQL">pgvector</abbr>, and ranked by similarity to plain words. Try a query.</p>
+    </div>
+    <div class="demo reveal">
+      <div class="fs-search">
+        <input id="fsq" type="search" placeholder="Describe what you are looking for…" value="worker in a hard hat" aria-label="Search query">
+        <button class="btn primary" id="fsGo">Search</button>
+      </div>
+      <div class="fs-sugg" id="fsSugg"></div>
+      <div class="grid" id="fsGrid"></div>
+    </div>
+    <p class="note">Every snapshot is a real YOLOv8 detection cut from the footage above. In the browser your words are matched against tags on each detection; in production MDI Veritas compares SigLIP 2 image and text embeddings (768 dimensions) with cosine similarity.</p>
 
-            <div class="projects-grid">
-                <div class="project-card fade-in">
-                    <div class="project-header">
-                        <h3 class="project-title">MDI AI Detection VMS Platform</h3>
-                        <span class="project-year">2025</span>
-                    </div>
-                    <p class="project-description">
-                        Revolutionary Video Management System integrating 8+ specialized computer vision models for comprehensive security monitoring. 
-                        Processing 100TB+ monthly with real-time threat detection and behavioral analysis.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">TensorFlow</span>
-                        <span class="tech-tag">OpenCV</span>
-                        <span class="tech-tag">Docker</span>
-                        <span class="tech-tag">AWS</span>
-                        <span class="tech-tag">React</span>
-                    </div>
-                    <ul class="achievements">
-                        <li>95%+ accuracy across all detection models</li>
-                        <li>Sub-100ms real-time processing latency</li>
-                        <li>80% reduction in false positive alerts</li>
-                        <li>Serving 15+ enterprise clients</li>
-                    </ul>
-                    <div class="project-links">
-                        <a href="https://mdiaidetection.com/" target="_blank" class="project-link">Visit Project →</a>
-                    </div>
-                </div>
+    <div style="height:120px"></div>
 
-                <div class="project-card fade-in">
-                    <div class="project-header">
-                        <h3 class="project-title">AI-Driven Mood Analysis System</h3>
-                        <span class="project-year">2024</span>
-                    </div>
-                    <p class="project-description">
-                        Advanced NLP system for mental health support using ensemble machine learning models. 
-                        Processes 500K+ Reddit posts with adaptive content recommendation engine.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Scikit-Learn</span>
-                        <span class="tech-tag">NLTK</span>
-                        <span class="tech-tag">PostgreSQL</span>
-                        <span class="tech-tag">FastAPI</span>
-                    </div>
-                    <ul class="achievements">
-                        <li>F1-score of 0.92 in emotion classification</li>
-                        <li>94% accuracy across 6 emotional categories</li>
-                        <li>Real-time prediction pipeline</li>
-                        <li>Production-ready recommendation system</li>
-                    </ul>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-header">
-                        <h3 class="project-title">Elimunity Educational Platform</h3>
-                        <span class="project-year">2020-Present</span>
-                    </div>
-                    <p class="project-description">
-                        Cross-platform educational solution with intuitive UX/UI serving 1,000+ active users. 
-                        Full-stack development with real-time synchronization and scalable architecture.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Unity</span>
-                        <span class="tech-tag">C#</span>
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">MongoDB</span>
-                        <span class="tech-tag">Adobe UX</span>
-                    </div>
-                    <ul class="achievements">
-                        <li>1,000+ active users across platforms</li>
-                        <li>Cross-platform mobile and web compatibility</li>
-                        <li>Real-time data synchronization</li>
-                        <li>Scalable backend architecture</li>
-                    </ul>
-                    <div class="project-links">
-                        <a href="https://elimunity.com/" target="_blank" class="project-link">Visit Project →</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills" class="section">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Technical Expertise</h2>
-                <p class="section-subtitle">
-                    Comprehensive skill set spanning AI development, data science, and enterprise architecture
-                </p>
-            </div>
-
-            <div class="skills-container">
-                <div class="skill-category fade-in">
-                    <h3>AI & Machine Learning</h3>
-                    <div class="skill-list">
-                        <span class="skill-item">Computer Vision</span>
-                        <span class="skill-item">Deep Learning</span>
-                        <span class="skill-item">Neural Networks</span>
-                        <span class="skill-item">TensorFlow</span>
-                        <span class="skill-item">PyTorch</span>
-                        <span class="skill-item">OpenCV</span>
-                        <span class="skill-item">YOLO</span>
-                        <span class="skill-item">MLOps</span>
-                    </div>
-                </div>
-
-                <div class="skill-category fade-in">
-                    <h3>Data Science & Analytics</h3>
-                    <div class="skill-list">
-                        <span class="skill-item">Predictive Modeling</span>
-                        <span class="skill-item">Feature Engineering</span>
-                        <span class="skill-item">Statistical Analysis</span>
-                        <span class="skill-item">Pandas</span>
-                        <span class="skill-item">NumPy</span>
-                        <span class="skill-item">Scikit-Learn</span>
-                        <span class="skill-item">Matplotlib</span>
-                        <span class="skill-item">Seaborn</span>
-                    </div>
-                </div>
-
-                <div class="skill-category fade-in">
-                    <h3>Programming & Databases</h3>
-                    <div class="skill-list">
-                        <span class="skill-item">Python</span>
-                        <span class="skill-item">SQL</span>
-                        <span class="skill-item">JavaScript</span>
-                        <span class="skill-item">C#</span>
-                        <span class="skill-item">MySQL</span>
-                        <span class="skill-item">PostgreSQL</span>
-                        <span class="skill-item">MongoDB</span>
-                        <span class="skill-item">Redis</span>
-                    </div>
-                </div>
-
-                <div class="skill-category fade-in">
-                    <h3>Cloud & DevOps</h3>
-                    <div class="skill-list">
-                        <span class="skill-item">AWS</span>
-                        <span class="skill-item">Microsoft Azure</span>
-                        <span class="skill-item">Docker</span>
-                        <span class="skill-item">Kubernetes</span>
-                        <span class="skill-item">CI/CD</span>
-                        <span class="skill-item">Git</span>
-                        <span class="skill-item">Jenkins</span>
-                        <span class="skill-item">Terraform</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="contact fade-in">
-            <h2 class="contact-title">Let's Build Something Exceptional</h2>
-            <p class="contact-subtitle">
-                Ready to transform your business with cutting-edge AI solutions? 
-                Let's discuss how we can drive innovation together.
-            </p>
-            <div class="hero-cta">
-                <a href="mailto:nicmapogha@gmail.com" class="btn btn-primary">Get In Touch</a>
-                <a href="https://www.linkedin.com/in/nmapogha" target="_blank" class="btn btn-secondary">LinkedIn Profile</a>
-            </div>
-            <div class="contact-info">
-                <a href="mailto:nicmapogha@gmail.com" class="contact-item">
-                    <span>✉</span> nicmapogha@gmail.com
-                </a>
-                <a href="tel:815.561.5451" class="contact-item">
-                    <span>📞</span> 815.561.5451
-                </a>
-                <span class="contact-item">
-                    <span>📍</span> Plainfield, IL
-                </span>
-            </div>
-        </section>
+    <div class="sec-head reveal">
+      <div><span class="idx">Secure delivery</span><h2>A green build is not the same as shipping.</h2></div>
+      <p>Appliances on customer premises never hold source code or repository keys. They receive a signed, edge-only bundle, and promotion to customers is a separate, deliberate step. Run a release, then try to slip a tampered one past a device.</p>
+    </div>
+    <div class="demo reveal">
+      <div class="demo-bar"><span class="live">release pipeline · GitHub Actions</span><span>signing key lives only in CI</span></div>
+      <div class="pipe">
+        <div class="steps" id="steps"></div>
+        <div class="pipe-ctl">
+          <button class="btn primary" id="runRel">Run a release</button>
+          <button class="btn" id="runBad">Try a tampered bundle</button>
+          <span class="pipe-status" id="pipeStatus">ready</span>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // Neural Network Background Animation
-        function createNeuralNetwork() {
-            const container = document.getElementById('neuralBg');
-            const nodes = [];
-            const connections = [];
-            
-            // Create nodes
-            for (let i = 0; i < 50; i++) {
-                const node = document.createElement('div');
-                node.className = 'node';
-                node.style.left = Math.random() * 100 + '%';
-                node.style.top = Math.random() * 100 + '%';
-                node.style.animationDelay = Math.random() * 3 + 's';
-                container.appendChild(node);
-                nodes.push({
-                    element: node,
-                    x: parseFloat(node.style.left),
-                    y: parseFloat(node.style.top)
-                });
-            }
-            
-            // Create connections between nearby nodes
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const dx = nodes[i].x - nodes[j].x;
-                    const dy = nodes[i].y - nodes[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 20 && Math.random() > 0.7) {
-                        const connection = document.createElement('div');
-                        connection.className = 'connection';
-                        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-                        connection.style.left = Math.min(nodes[i].x, nodes[j].x) + '%';
-                        connection.style.top = Math.min(nodes[i].y, nodes[j].y) + '%';
-                        connection.style.width = distance + 'vw';
-                        connection.style.transform = `rotate(${angle}deg)`;
-                        connection.style.animationDelay = Math.random() * 4 + 's';
-                        container.appendChild(connection);
-                    }
-                }
-            }
-        }
+  </div>
+</section>
 
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+<!-- ============ WORK ============ -->
+<section id="work" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="idx">Selected work</span><h2>Production platforms, not prototypes.</h2></div>
+      <p>From a Raspberry Pi counting people at a door to a hub orchestrating GPU appliances across customer sites.</p>
+    </div>
+    <div class="projects">
+      <article class="proj wide reveal" style="--c:var(--cyan)">
+        <div class="tag">Flagship · MDI AI Detection</div>
+        <h3>MDIX</h3>
+        <p>A distributed, real-time CCTV analytics platform. GPU edge appliances watch cameras on site; a cloud hub aggregates events, runs escalation and manages the fleet.</p>
+        <ul>
+          <li>NVIDIA DeepStream pipeline with batched TensorRT inference and hardware video decode</li>
+          <li>Detection of people, vehicles, fire, smoke and weapons, with a second model that verifies weapon alerts before anyone is paged</li>
+          <li>Zero-touch device provisioning, over-the-air updates and fleet health heartbeats</li>
+          <li>Alarm dispatch into central monitoring stations (IMMIX, Manitou, Stages), email, SMS and WhatsApp with tiered escalation</li>
+        </ul>
+        <div class="stack"><span>Python 3.12</span><span>FastAPI</span><span>DeepStream</span><span>TensorRT</span><span>GStreamer</span><span>InsightFace</span><span>PostgreSQL + pgvector</span><span>Redis</span><span>MQTT</span><span>WireGuard</span><span>React</span></div>
+        <a class="more" href="https://mdixhub.mdiaidetection.com/" target="_blank" rel="noopener">mdixhub.mdiaidetection.com →</a>
+      </article>
+      <article class="proj wide reveal" style="--c:var(--violet);--glow:rgba(167,139,250,.16)">
+        <div class="tag">Forensics · Law enforcement</div>
+        <h3>MDI Veritas</h3>
+        <p>An offline, GPU-accelerated forensic video workstation for prosecutors and forensic labs. Upload footage, find what matters, and export court-ready evidence.</p>
+        <ul>
+          <li>Person, vehicle and weapon detection plus license plate recognition</li>
+          <li>Natural-language search over footage using SigLIP 2 embeddings</li>
+          <li>Video redaction, timeline annotation and chain-of-custody audit logging</li>
+          <li>Fully offline maps and zero-configuration network discovery on the local network</li>
+        </ul>
+        <div class="stack"><span>FastAPI</span><span>SigLIP 2</span><span>YOLO</span><span>EasyOCR</span><span>FFmpeg</span><span>MapLibre</span><span>React</span></div>
+        <a class="more" href="https://veritas.mdiaidetection.com/" target="_blank" rel="noopener">veritas.mdiaidetection.com →</a>
+      </article>
+      <article class="proj reveal" style="--c:var(--green);--glow:rgba(61,255,168,.13)">
+        <div class="tag">Edge · Raspberry Pi</div>
+        <h3>MDIFlow</h3>
+        <p>A people counter that runs on a Raspberry Pi 4 or 5. YOLOv8 Nano on ONNX Runtime, ByteTrack tracking and direction-aware line crossing.</p>
+        <div class="stack"><span>ONNX Runtime</span><span>ByteTrack</span><span>ONVIF</span><span>WebSocket</span></div>
+      </article>
+      <article class="proj reveal" style="--c:var(--amber);--glow:rgba(255,181,71,.13)">
+        <div class="tag">Access control</div>
+        <h3>Gateflow AI</h3>
+        <p>License plate recognition for gates: YOLOv8 finds the plate, Florence-2 reads it, and guards approve entry from a live dashboard.</p>
+        <div class="stack"><span>YOLOv8</span><span>Florence-2</span><span>Redis Streams</span><span>TypeScript</span></div>
+      </article>
+      <article class="proj reveal" style="--c:var(--cyan)">
+        <div class="tag">Open source</div>
+        <h3>ONVIF Camera Manager</h3>
+        <p>Discovers IP cameras on a network, streams them in the browser and generates registration codes for video management systems.</p>
+        <div class="stack"><span>Flask</span><span>WS-Discovery</span><span>OpenCV</span></div>
+        <a class="more" href="https://github.com/nicnonnious/onvif-camera-manager" target="_blank" rel="noopener">View on GitHub →</a>
+      </article>
+      <article class="proj wide reveal" style="--c:var(--red);--glow:rgba(255,84,104,.12)">
+        <div class="tag">Research · Natural language processing</div>
+        <h3>Mood analysis from social media</h3>
+        <p>Ensemble machine learning over 500,000+ Reddit posts to classify emotion across six categories (F1 score 0.92) and recommend uplifting content.</p>
+        <div class="stack"><span>Scikit-learn</span><span>NLTK</span><span>FastAPI</span><span>PostgreSQL</span></div>
+        <a class="more" href="https://github.com/nicnonnious/moodChanger" target="_blank" rel="noopener">View on GitHub →</a>
+      </article>
+      <article class="proj wide reveal" style="--c:var(--green);--glow:rgba(61,255,168,.1)">
+        <div class="tag">Education</div>
+        <h3>Elimunity</h3>
+        <p>A cross-platform learning platform with real-time sync, serving 1,000+ active users on mobile and web.</p>
+        <div class="stack"><span>Unity</span><span>C#</span><span>Node.js</span><span>MongoDB</span></div>
+        <a class="more" href="https://elimunity.com/" target="_blank" rel="noopener">elimunity.com →</a>
+      </article>
+    </div>
+  </div>
+</section>
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="idx">Experience</span><h2>Where the work happened.</h2></div>
+      <p>Telecom operations at national scale, then university infrastructure, then leading AI engineering for video security.</p>
+    </div>
+    <div class="xp">
+      <div class="job reveal">
+        <div class="when">2025 to present</div>
+        <div>
+          <h3>Lead AI Engineer</h3>
+          <div class="org">MDI AI Detection</div>
+          <ul>
+            <li>Architected the MDIX hub and edge platform and the MDI Veritas forensic workstation from the ground up</li>
+            <li>Moved inference to an NVIDIA DeepStream pipeline that runs on every GPU generation from Turing to Blackwell</li>
+            <li>Built the fleet layer: zero-touch provisioning, trust tiers, signed edge releases and over-the-air updates</li>
+            <li>Integrated alarms with the central monitoring stations security operators already use</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job reveal">
+        <div class="when">2023 to 2025</div>
+        <div>
+          <h3>Graduate Assistant, Information Technology</h3>
+          <div class="org">Lewis University</div>
+          <ul>
+            <li>Automated help desk reporting, improving department efficiency by 40%</li>
+            <li>Supported infrastructure for 5,000+ students and faculty</li>
+            <li>Completed a master's degree in data science</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job reveal">
+        <div class="when">2018 to 2022</div>
+        <div>
+          <h3>Network Operations Center Engineer, Team Lead</h3>
+          <div class="org">Viettel, Tanzania</div>
+          <ul>
+            <li>Led a team of 12 engineers running 24/7 operations for a network serving 15M+ subscribers</li>
+            <li>Cut network downtime by 45% with proactive monitoring</li>
+            <li>Technical Employee of the Year, 2021</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // Observe all fade-in elements
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+<!-- ============ STACK ============ -->
+<section id="stack" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="idx">Toolbox</span><h2>What I reach for.</h2></div>
+      <p></p>
+    </div>
+    <div class="skills">
+      <div class="sk reveal"><h4>Vision and inference</h4><div><span>DeepStream</span><span>TensorRT</span><span>GStreamer</span><span>YOLO</span><span>InsightFace</span><span>SigLIP 2</span><span>Florence-2</span><span>ONNX Runtime</span><span>OpenCV</span></div></div>
+      <div class="sk reveal"><h4>Machine learning</h4><div><span>PyTorch</span><span>TensorFlow</span><span>Scikit-learn</span><span>Pandas</span><span>NumPy</span><span>Model optimization</span><span>MLOps</span></div></div>
+      <div class="sk reveal"><h4>Backend and data</h4><div><span>Python</span><span>C++</span><span>FastAPI</span><span>PostgreSQL</span><span>pgvector</span><span>Redis</span><span>MQTT</span><span>TypeScript</span><span>React</span></div></div>
+      <div class="sk reveal"><h4>Infrastructure</h4><div><span>Docker</span><span>GitHub Actions</span><span>WireGuard</span><span>Nginx</span><span>systemd</span><span>Azure</span><span>AWS</span><span>Linux</span></div></div>
+    </div>
+  </div>
+</section>
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <span class="idx">Contact</span>
+    <h2>Have cameras that should be smarter?</h2>
+    <p>I am open to collaboration on edge AI, video intelligence and computer vision systems that have to work in the real world.</p>
+    <div class="cta">
+      <a class="btn primary" href="mailto:nicmapogha@gmail.com">nicmapogha@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/nmapogha" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/nicnonnious" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
 
-        // Typing effect for hero title
-        function typeWriter(element, text, speed = 100) {
-            let i = 0;
-            element.innerHTML = '';
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
+<footer>
+  <span>© <span id="yr"></span> Nicodemus N. Mapogha</span>
+  <span>Hand-built. No frameworks. Deployed with GitHub Actions.</span>
+</footer>
 
-        // Navbar scroll effect
-        let lastScrollTop = 0;
-        const nav = document.querySelector('nav');
-        
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                nav.style.transform = 'translateY(-100%)';
-            } else {
-                nav.style.transform = 'translateY(0)';
-            }
-            lastScrollTop = scrollTop;
-        });
+<script src="data.js"></script>
+<script>
+(()=>{
+'use strict';
+const TAU=Math.PI*2, rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C={cyan:'#3d8bff',green:'#00ff88',amber:'#ffb547',red:'#ff4d5e',violet:'#8b8ef7',text:'#ffffff',muted:'#a0a0a0',dim:'#666666',line:'#222222'};
 
-        // Initialize animations when page loads
-        window.addEventListener('load', () => {
-            createNeuralNetwork();
-            
-            // Add slight delay to title typing effect
-            setTimeout(() => {
-                const titleElement = document.querySelector('.hero-title');
-                const originalText = titleElement.textContent;
-                typeWriter(titleElement, originalText, 60);
-            }, 500);
-        });
+/* ---------- shared canvas helper: DPR scaling, resize, pause offscreen ---------- */
+function stage(canvas,onResize){
+  const ctx=canvas.getContext('2d');
+  const s={ctx,w:0,h:0,visible:true};
+  const fit=()=>{const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
+    s.w=r.width;s.h=r.height;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);
+    ctx.setTransform(d,0,0,d,0,0);onResize&&onResize(s);};
+  new ResizeObserver(fit).observe(canvas);fit();
+  new IntersectionObserver(e=>{s.visible=e[0].isIntersecting},{rootMargin:'100px'}).observe(canvas);
+  return s;
+}
+function loop(s,fn){let last=performance.now();const f=t=>{const dt=Math.min(.05,(t-last)/1000);last=t;if(s.visible&&!document.hidden)fn(dt,t);requestAnimationFrame(f)};requestAnimationFrame(f)}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)}
+const hhmmss=d=>d.toTimeString().slice(0,8);
 
-        // Add dynamic counter animation for stats
-        function animateCounters() {
-            const counters = document.querySelectorAll('.stat-number');
-            
-            counters.forEach(counter => {
-                const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
-                const suffix = counter.textContent.replace(/[0-9]/g, '');
-                let current = 0;
-                const increment = target / 50;
-                
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        counter.textContent = target + suffix;
-                        clearInterval(timer);
-                    } else {
-                        counter.textContent = Math.floor(current) + suffix;
-                    }
-                }, 50);
-            });
-        }
+/* ======================= HERO: real footage, real detections ======================= */
+(function hero(){
+  const NAMES={0:'person',1:'bicycle',2:'car',3:'motorcycle',5:'bus',7:'truck',24:'backpack',26:'handbag'};
+  const HUES=['#3d8bff','#00ff88','#8b8ef7','#ffb547','#ff6b9d','#5eead4'];
+  const colFor=id=>HUES[id%HUES.length];
+  const CFG={
+    aisle:{mode:'dwell'},
+    warehouse:{mode:'zone',zone:[[.36,.73],[.56,.5],[.98,.7],[.98,1],[.45,1]]},
+    lot:{mode:'line',line:[[.87,.02],[.8,.98]]},
+    hallway:{mode:'count'}
+  };
+  const pip=(p,poly)=>{let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[a,b]=poly[i],[x,y]=poly[j];if((b>p[1])!==(y>p[1])&&p[0]<(x-a)*(p[1]-b)/(y-b)+a)c=!c}return c};
+  const sideOf=(p,[a,b])=>Math.sign((b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]));
+  const live={on:false,dets:[],ms:0};
 
-        // Trigger counter animation when stats section is visible
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
+  const feeds=[...document.querySelectorAll('#vms .feed')].map(el=>{
+    const key=el.dataset.feed,frames=(window.TRACKS||{})[key]||[],cfg=CFG[key];
+    const f={key,el,cfg,frames,video:el.querySelector('video'),cv:el.querySelector('canvas'),tag:el.querySelector('[data-tag]'),clk:el.querySelector('.clk'),visible:false,w:0,h:0};
+    f.ctx=f.cv.getContext('2d');
+    // first appearance of each track (for dwell) and precomputed line crossings
+    f.first={};const lastSide={};f.cross=[];
+    for(const[t,objs]of frames)for(const o of objs){const id=o[0];if(f.first[id]===undefined)f.first[id]=t;
+      if(cfg.mode==='line'&&o[1]===0){const p=[o[3]+o[5]/2,o[4]+o[6]];const s=sideOf(p,cfg.line);if(lastSide[id]&&s&&s!==lastSide[id])f.cross.push([t,s]);if(s)lastSide[id]=s}}
+    const fit=()=>{const r=f.cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);f.w=r.width;f.h=r.height;f.cv.width=Math.round(r.width*d);f.cv.height=Math.round(r.height*d);f.ctx.setTransform(d,0,0,d,0,0)};
+    new ResizeObserver(fit).observe(f.cv);fit();
+    new IntersectionObserver(e=>{f.visible=e[0].isIntersecting;if(f.visible){f.video.play().catch(()=>{})}else f.video.pause()},{threshold:.05}).observe(el);
+    return f;
+  });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const statsSection = document.querySelector('.stats');
-            if (statsSection) {
-                statsObserver.observe(statsSection);
-            }
-        });
+  // boxes at time t, interpolated between the two nearest detection frames
+  function boxesAt(f,t){const F=f.frames;if(!F.length)return[];let lo=0,hi=F.length-1;
+    while(lo<hi){const m=(lo+hi+1)>>1;if(F[m][0]<=t)lo=m;else hi=m-1}
+    const A=F[lo],B=F[Math.min(lo+1,F.length-1)];if(t<A[0])return[];
+    const k=B[0]>A[0]?clamp((t-A[0])/(B[0]-A[0]),0,1):0,bm={};for(const o of B[1])bm[o[0]]=o;
+    return A[1].map(o=>{const b=bm[o[0]];return b?[o[0],o[1],o[2],...[3,4,5,6].map(i=>o[i]+(b[i]-o[i])*k)]:o});}
+  function trail(f,id,t){const pts=[];const F=f.frames;for(let i=F.length-1;i>=0;i--){const[ft,objs]=F[i];if(ft>t)continue;if(ft<t-1.8)break;const o=objs.find(o=>o[0]===id);if(o)pts.push([o[3]+o[5]/2,o[4]+o[6],ft])}return pts.reverse()}
 
-        // Add particle effects on mouse move
-        let mouseX = 0, mouseY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            // Create subtle particle effect
-            if (Math.random() > 0.98) {
-                createParticle(mouseX, mouseY);
-            }
-        });
+  function bracket(ctx,x,y,w,h,col,lw){const k=Math.max(5,Math.min(14,Math.min(w,h)*.22));ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.beginPath();
+    ctx.moveTo(x,y+k);ctx.lineTo(x,y);ctx.lineTo(x+k,y);ctx.moveTo(x+w-k,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w,y+k);
+    ctx.moveTo(x+w,y+h-k);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w-k,y+h);ctx.moveTo(x+k,y+h);ctx.lineTo(x,y+h);ctx.lineTo(x,y+h-k);ctx.stroke();
+    ctx.globalAlpha=.35;ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);ctx.globalAlpha=1}
+  function chip(ctx,x,y,text,col,small,W){ctx.font=`500 ${small?9:10.5}px JetBrains Mono,monospace`;const tw=ctx.measureText(text).width+10,th=small?13:16;if(W)x=Math.max(0,Math.min(x,W-tw));
+    const yy=y-th-2<0?y+2:y-th-2;ctx.fillStyle=col;rr(ctx,x,yy,tw,th,3);ctx.fill();ctx.fillStyle='#03080c';ctx.fillText(text,x+5,yy+th-(small?3.5:4.5))}
 
-        function createParticle(x, y) {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: fixed;
-                left: ${x}px;
-                top: ${y}px;
-                width: 2px;
-                height: 2px;
-                background: #0066ff;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 9999;
-                animation: particleFade 1s ease-out forwards;
-            `;
-            
-            document.body.appendChild(particle);
-            
-            setTimeout(() => {
-                document.body.removeChild(particle);
-            }, 1000);
-        }
+  function draw(f,now){
+    const{ctx,w,h,cfg}=f,v=f.video,t=v.currentTime,small=f.key!=='aisle';ctx.clearRect(0,0,w,h);
+    if(f.key==='aisle'&&live.on){drawLive(f);return}
+    const objs=boxesAt(f,t).filter(o=>o[1]!==24&&o[1]!==26||!small);
+    // scene logic overlays
+    let tag='',tagCls='';
+    if(cfg.mode==='zone'){const inside=objs.filter(o=>o[1]===0&&pip([o[3]+o[5]/2,o[4]+o[6]],cfg.zone));const br=inside.length>0;
+      ctx.beginPath();cfg.zone.forEach(([x,y],i)=>i?ctx.lineTo(x*w,y*h):ctx.moveTo(x*w,y*h));ctx.closePath();
+      ctx.fillStyle=br?`rgba(255,77,94,${.16+.1*Math.sin(now/140)})`:'rgba(255,181,71,.07)';ctx.fill();
+      ctx.setLineDash(br?[]:[5,4]);ctx.lineWidth=1.5;ctx.strokeStyle=br?C.red:'rgba(255,181,71,.8)';ctx.stroke();ctx.setLineDash([]);
+      f.breach=br;tag=br?`ZONE BREACH · ${inside.length}`:'zone clear';tagCls=br?'alert':'ok'}
+    if(cfg.mode==='line'){const[a,b]=cfg.line;let inn=0,out=0,recent=0;for(const[et,s]of f.cross){if(et>t)break;s>0?inn++:out++;if(t-et<.8)recent=1-(t-et)/.8}
+      ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.5+recent*2.5;ctx.strokeStyle=recent?C.green:'rgba(61,139,255,.85)';ctx.shadowColor=C.green;ctx.shadowBlur=recent*18;
+      ctx.beginPath();ctx.moveTo(a[0]*w,a[1]*h);ctx.lineTo(b[0]*w,b[1]*h);ctx.stroke();ctx.restore();tag=`IN ${inn} · OUT ${out}`;tagCls=recent?'ok':''}
+    if(cfg.mode==='count'){const n=objs.filter(o=>o[1]===0).length;tag=`${n} ${n===1?'person':'people'} in view`}
+    // trails
+    for(const o of objs){const pts=trail(f,o[0],t);if(pts.length<2)continue;const col=colFor(o[0]);
+      for(let i=1;i<pts.length;i++){const al=i/pts.length;ctx.strokeStyle=col;ctx.globalAlpha=al*.7;ctx.lineWidth=small?1.2:2*al+.5;ctx.beginPath();ctx.moveTo(pts[i-1][0]*w,pts[i-1][1]*h);ctx.lineTo(pts[i][0]*w,pts[i][1]*h);ctx.stroke()}
+      ctx.globalAlpha=1;const p=pts[pts.length-1];ctx.fillStyle=col;ctx.beginPath();ctx.arc(p[0]*w,p[1]*h,small?1.8:2.6,0,TAU);ctx.fill()}
+    // boxes
+    for(const o of objs){const[id,c,cf,x,y,bw,bh]=o;let col=colFor(id);
+      if(cfg.mode==='zone'&&c===0&&pip([x+bw/2,y+bh],cfg.zone))col=C.red;
+      bracket(ctx,x*w,y*h,bw*w,bh*h,col,small?1.3:1.8);
+      let label=small?`${NAMES[c]} ${cf.toFixed(2)}`:`#${id} ${NAMES[c]} ${cf.toFixed(2)}`;
+      if(cfg.mode==='dwell'&&c===0)label+=` · ${(t-f.first[id]).toFixed(1)}s`;
+      if(!small)chip(ctx,x*w,y*h,label,col,w<520,w)}
+    if(f.tag){f.tag.textContent=tag;f.tag.className='tag '+tagCls;f.tag.hidden=!tag}
+    if(f.key==='aisle'){const ppl=objs.filter(o=>o[1]===0);
+      document.getElementById('stView').textContent=ppl.length;
+      document.getElementById('stDwell').textContent=(ppl.length?ppl.reduce((s,o)=>s+t-f.first[o[0]],0)/ppl.length:0).toFixed(1)+' s';
+      document.getElementById('stUniq').textContent=Object.values(f.first).filter(ft=>ft<=t).length;}
+  }
+  function drawLive(f){const{ctx,w,h}=f;
+    for(const d of live.dets){const[x,y,bw,bh,c,cf]=d;bracket(ctx,x*w,y*h,bw*w,bh*h,C.cyan,1.8);chip(ctx,x*w,y*h,`${NAMES[c]} ${cf.toFixed(2)}`,C.cyan,w<520,w)}
+    f.tag.hidden=false;f.tag.className='tag ok';f.tag.textContent=`on your device · ${live.ms.toFixed(0)} ms`;
+    document.getElementById('stView').textContent=live.dets.filter(d=>d[4]===0).length}
 
-        // Add CSS for particle animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleFade {
-                0% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+  const clocks=feeds.filter(f=>f.clk);
+  (function tick(now){for(const f of feeds)if(f.visible&&!document.hidden&&f.w)draw(f,now);
+    const d=new Date();for(const f of clocks)f.clk.textContent=(f.w>520?d.toLocaleDateString('en-CA')+' ':'')+hhmmss(d);requestAnimationFrame(tick)})(performance.now());
+
+  /* ---------- live in-browser inference with ONNX Runtime Web ---------- */
+  const btn=document.getElementById('liveBtn'),note=document.getElementById('liveNote'),mode=document.getElementById('vmsMode'),stInf=document.getElementById('stInf');
+  let session=null,loading=false;const KEEP=[0,1,2,3,5,7];
+  const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Could not load '+src));document.head.appendChild(s)});
+  async function fetchParts(urls,label,total){const parts=[];let got=0;
+    for(const url of urls){const r=await fetch(url);if(!r.ok)throw new Error(label+' download failed ('+r.status+')');const rd=r.body.getReader();
+      for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;note.innerHTML=`Downloading ${label} <b>${(got/1e6).toFixed(1)} / ${(total/1e6).toFixed(1)} MB</b>`}}
+    const buf=new Uint8Array(got);let o=0;for(const p of parts){buf.set(p,o);o+=p.length}return buf}
+  async function start(){
+    if(loading)return;loading=true;btn.disabled=true;
+    try{
+      if(!session){note.textContent='Loading ONNX Runtime…';await loadScript('ort/ort.wasm.min.js');
+        ort.env.wasm.wasmPaths=new URL('ort/',location.href).href;ort.env.wasm.numThreads=1;
+        ort.env.wasm.wasmBinary=(await fetchParts(['ort/ort-wasm-simd-threaded.wasm.part0','ort/ort-wasm-simd-threaded.wasm.part1'],'runtime',11.2e6)).buffer;
+        const model=await fetchParts(['models/yolov8n.onnx.part0','models/yolov8n.onnx.part1'],'model',12.8e6);note.textContent='Compiling the model for WebAssembly…';
+        session=await ort.InferenceSession.create(model,{executionProviders:['wasm'],graphOptimizationLevel:'all'});}
+      live.on=true;btn.textContent='Stop and show tracked results';mode.textContent='YOLOv8n · running on your device';loop();
+    }catch(e){note.textContent='Could not start the model here: '+e.message+'. The tracked results keep playing.';}
+    loading=false;btn.disabled=false;
+  }
+  function stop(){live.on=false;live.dets=[];btn.textContent='Run YOLOv8 on your device';mode.textContent='YOLOv8n · object tracking';stInf.textContent='precomputed';note.textContent='Stopped. The overlay is back to the tracked results computed ahead of time.'}
+  btn.addEventListener('click',()=>live.on?stop():start());
+  const S=640,pre=document.createElement('canvas');pre.width=pre.height=S;const pctx=pre.getContext('2d',{willReadFrequently:true});
+  const iou=(a,b)=>{const x1=Math.max(a[0],b[0]),y1=Math.max(a[1],b[1]),x2=Math.min(a[0]+a[2],b[0]+b[2]),y2=Math.min(a[1]+a[3],b[1]+b[3]);const i=Math.max(0,x2-x1)*Math.max(0,y2-y1);return i/(a[2]*a[3]+b[2]*b[3]-i)};
+  async function loop(){
+    const f=feeds[0],v=f.video,times=[];
+    while(live.on){
+      if(v.readyState<2||!f.visible){await new Promise(r=>setTimeout(r,200));continue}
+      const vw=v.videoWidth,vh=v.videoHeight,s=S/Math.max(vw,vh),nw=Math.round(vw*s),nh=Math.round(vh*s);
+      pctx.fillStyle='rgb(114,114,114)';pctx.fillRect(0,0,S,S);pctx.drawImage(v,0,0,nw,nh);
+      const px=pctx.getImageData(0,0,S,S).data,N=S*S,inp=new Float32Array(3*N);
+      for(let i=0;i<N;i++){inp[i]=px[i*4]/255;inp[i+N]=px[i*4+1]/255;inp[i+2*N]=px[i*4+2]/255}
+      const t0=performance.now();
+      const out=(await session.run({images:new ort.Tensor('float32',inp,[1,3,S,S])}))[session.outputNames[0]].data;
+      const ms=performance.now()-t0;times.push(ms);if(times.length>10)times.shift();live.ms=times.reduce((a,b)=>a+b)/times.length;
+      const A=8400,cand=[];
+      for(let j=0;j<A;j++){let best=0,bc=-1;for(const c of KEEP){const sc=out[(4+c)*A+j];if(sc>best){best=sc;bc=c}}
+        if(best>.35){const cx=out[j],cy=out[A+j],bw=out[2*A+j],bh=out[3*A+j];cand.push([(cx-bw/2)/s/vw,(cy-bh/2)/s/vh,bw/s/vw,bh/s/vh,bc,best])}}
+      cand.sort((a,b)=>b[5]-a[5]);const keep=[];for(const c of cand)if(!keep.some(k=>k[4]===c[4]&&iou(k,c)>.5))keep.push(c);
+      live.dets=keep;stInf.textContent=live.ms.toFixed(0)+' ms';
+      note.innerHTML=`Running on <b>your device</b> with WebAssembly: <b>${live.ms.toFixed(0)} ms</b> per frame, ${keep.length} objects. The production appliance runs this on a GPU with TensorRT.`;
+      await new Promise(r=>requestAnimationFrame(r));
+    }
+  }
+})();
+
+/* ======================= 01 HUB AND EDGE ======================= */
+(function hubEdge(){
+  const cv=document.getElementById('heCanvas'),logEl=document.getElementById('heLog'),stat=document.getElementById('heStat');
+  let L={};
+  const S=stage(cv,s=>{const w=s.w,h=s.h,mob=w<520;
+    L.hub={x:w*(mob?.6:.64),y:h*.5};
+    L.sites=[.2,.5,.8].map((f,i)=>({x:w*(mob?.16:.14),y:h*f}));
+    L.out=['monitoring station','SMS / WhatsApp','email'].map((n,i)=>({n,x:w*.93,y:h*(.28+i*.22)}));
+  });
+  const ctx=S.ctx;
+  const sites=[0,1,2].map(i=>({name:`edge-0${i+1}`,up:true,wal:0,replay:0,evT:rnd(.3,1),hbT:rnd(0,3),pulse:0,cams:[0,1,2,3].map(()=>rnd(0,TAU))}));
+  const packets=[];let hubPulse=0,userTouched=false,autoT=8,autoSite=-1;
+  const objs=['person','vehicle','person','person','vehicle','smoke','animal'];
+  function log(cls,msg){const d=document.createElement('div');d.className=cls;d.textContent=`${hhmmss(new Date())}  ${msg}`;logEl.appendChild(d);while(logEl.children.length>40)logEl.firstChild.remove()}
+  function curve(a,b,t,bend){const mx=(a.x+b.x)/2,my=(a.y+b.y)/2+bend;const u=1-t;return{x:u*u*a.x+2*u*t*mx+t*t*b.x,y:u*u*a.y+2*u*t*my+t*t*b.y}}
+  function send(i,type,rev){packets.push({i,type,t:0,rev,sp:type==='md'?.55:type==='hb'?.8:.9})}
+  function setUp(i,up){const s=sites[i];if(s.up===up)return;s.up=up;
+    if(!up)log('t-err',`${s.name} ✕ link lost · journaling to write-ahead log`);
+    else{log('t-wal',`${s.name} ✓ reconnected · replaying ${s.wal} journaled events`);s.replay=s.wal;s.wal=0}
+    const down=sites.filter(s=>!s.up).map(s=>s.name);stat.textContent=down.length?`${down.join(', ')} offline · buffering`:'all links up'}
+  cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+    L.sites.forEach((p,i)=>{if(Math.hypot(p.x-x,p.y-y)<60){userTouched=true;setUp(i,!sites[i].up)}})});
+  cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;cv.style.cursor=L.sites.some(p=>Math.hypot(p.x-x,p.y-y)<60)?'pointer':'default'});
+  log('t-hb','hub online · listening for edge devices');
+
+  loop(S,(dt,t)=>{
+    const w=S.w,h=S.h;
+    if(!userTouched){autoT-=dt;if(autoT<=0){if(autoSite<0){autoSite=Math.floor(rnd(0,3));setUp(autoSite,false);autoT=6}else{setUp(autoSite,true);autoSite=-1;autoT=12}}}
+    sites.forEach((s,i)=>{
+      s.evT-=dt;s.hbT-=dt;s.pulse=Math.max(0,s.pulse-dt*2);
+      if(s.evT<=0){s.evT=rnd(.5,1.8);const o=pick(objs),cam=1+Math.floor(rnd(0,4));s.pulse=1;
+        if(s.up){send(i,'ev');log('t-ev',`${s.name} → hub  event  ${o} · cam-${cam}  (delivered at least once)`);if(Math.random()<.35)setTimeout(()=>{if(s.up){send(i,'md');log('t-md',`${s.name} → hub  media push  clip ${Math.floor(rnd(2,9))}s`)}},400)}
+        else{s.wal++;log('t-wal',`${s.name} ⤓ journaled  ${o} · cam-${cam}  (log size ${s.wal})`)}}
+      if(s.hbT<=0){s.hbT=3.5;if(s.up){send(i,'hb');log('t-hb',`${s.name} → hub  heartbeat  gpu ${Math.floor(rnd(28,74))}%  cams 4/4`)}}
+      if(s.replay>0&&s.up){s.rt=(s.rt||0)-dt;if(s.rt<=0){s.rt=.08;s.replay--;send(i,'rp')}}
+      if(Math.random()<dt*.05&&s.up){send(i,'cmd',true);log('t-hb',`hub → ${s.name}  command  sync_config`)}
+    });
+    for(let k=packets.length-1;k>=0;k--){const p=packets[k];p.t+=dt*p.sp;
+      if(p.t>=1){packets.splice(k,1);
+        if(p.type==='out')continue;
+        if(!p.rev){hubPulse=1;if((p.type==='ev'||p.type==='rp')&&Math.random()<.3){const o=Math.floor(rnd(0,3));packets.push({type:'out',o,t:0,sp:1.3})}}}}
+    hubPulse=Math.max(0,hubPulse-dt*2.5);
+
+    ctx.clearRect(0,0,w,h);
+    // dotted backdrop
+    ctx.fillStyle='rgba(160,160,160,.07)';for(let x=12;x<w;x+=24)for(let y=12;y<h;y+=24)ctx.fillRect(x,y,1,1);
+    // tunnels
+    L.sites.forEach((p,i)=>{const s=sites[i],bend=(i-1)*-40;
+      ctx.lineWidth=6;ctx.strokeStyle=s.up?'rgba(61,139,255,.07)':'rgba(255,77,94,.06)';ctx.beginPath();for(let t2=0;t2<=1.001;t2+=.05){const q=curve(p,L.hub,t2,bend);t2?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}ctx.stroke();
+      ctx.lineWidth=1;ctx.setLineDash(s.up?[]:[4,6]);ctx.strokeStyle=s.up?'rgba(61,139,255,.35)':'rgba(255,77,94,.55)';ctx.stroke();ctx.setLineDash([]);
+      if(!s.up){const q=curve(p,L.hub,.5,bend);ctx.fillStyle=C.red;ctx.font='600 16px Inter';ctx.textAlign='center';ctx.fillText('✕',q.x,q.y+5);ctx.textAlign='left'}
+    });
+    L.out.forEach((o,i)=>{ctx.strokeStyle='rgba(160,160,160,.18)';ctx.beginPath();ctx.moveTo(L.hub.x,L.hub.y);ctx.lineTo(o.x,o.y);ctx.stroke()});
+    // packets
+    const col={ev:C.green,hb:C.dim,md:C.violet,rp:C.amber,cmd:C.cyan,out:C.red};
+    for(const p of packets){let q;
+      if(p.type==='out'){const o=L.out[p.o];q={x:L.hub.x+(o.x-L.hub.x)*p.t,y:L.hub.y+(o.y-L.hub.y)*p.t}}
+      else{const a=L.sites[p.i],bend=(p.i-1)*-40;q=p.rev?curve(L.hub,a,p.t,bend):curve(a,L.hub,p.t,bend)}
+      const r=p.type==='md'?4.5:p.type==='hb'?2:3;ctx.shadowColor=col[p.type];ctx.shadowBlur=12;ctx.fillStyle=col[p.type];ctx.beginPath();ctx.arc(q.x,q.y,r,0,TAU);ctx.fill();ctx.shadowBlur=0}
+    // sites
+    ctx.font='500 11px JetBrains Mono,monospace';
+    L.sites.forEach((p,i)=>{const s=sites[i];
+      s.cams.forEach((a,j)=>{const ang=a+t/4000,cx=p.x+Math.cos(ang)*40,cy=p.y+Math.sin(ang)*30;ctx.strokeStyle='rgba(160,160,160,.2)';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(cx,cy);ctx.stroke();ctx.fillStyle='#a0a0a0';ctx.beginPath();ctx.arc(cx,cy,2.5,0,TAU);ctx.fill()});
+      ctx.fillStyle='#141414';ctx.strokeStyle=s.up?`rgba(0,255,136,${.4+s.pulse*.6})`:C.red;ctx.lineWidth=1.5;rr(ctx,p.x-26,p.y-17,52,34,8);ctx.fill();ctx.stroke();
+      ctx.fillStyle=s.up?C.green:C.red;ctx.fillText('GPU',p.x-11,p.y+4);
+      ctx.fillStyle=C.muted;ctx.fillText(s.name,p.x-26,p.y+32);
+      if(s.wal>0){for(let k=0;k<Math.min(s.wal,14);k++){ctx.fillStyle=C.amber;ctx.fillRect(p.x+32,p.y+14-k*4,14,3)}ctx.fillStyle=C.amber;ctx.fillText(`log ${s.wal}`,p.x+30,p.y-(Math.min(s.wal,14)*4)+4)}
+    });
+    // hub
+    const H=L.hub,hg=ctx.createRadialGradient(H.x,H.y,0,H.x,H.y,110);hg.addColorStop(0,`rgba(61,139,255,${.1+hubPulse*.15})`);hg.addColorStop(1,'transparent');ctx.fillStyle=hg;ctx.fillRect(H.x-110,H.y-110,220,220);
+    ctx.fillStyle='#141414';ctx.strokeStyle=`rgba(61,139,255,${.5+hubPulse*.5})`;ctx.lineWidth=1.5;rr(ctx,H.x-66,H.y-36,132,72,12);ctx.fill();ctx.stroke();
+    ctx.textAlign='center';ctx.fillStyle=C.text;ctx.font='600 13px Space Grotesk,Inter';ctx.fillText('cloud hub',H.x,H.y-6);
+    ctx.fillStyle=C.muted;ctx.font='10px JetBrains Mono,monospace';ctx.fillText('alerts · escalation',H.x,H.y+10);ctx.fillText('fleet · dashboard',H.x,H.y+23);
+    ctx.textAlign='right';L.out.forEach(o=>{ctx.fillStyle=C.muted;if(w>=560)ctx.fillText(o.n,o.x+2,o.y-8);ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(o.x,o.y,3,0,TAU);ctx.fill()});ctx.textAlign='left';
+    ctx.fillStyle=C.dim;ctx.fillText('click a site to cut its link',12,h-12);
+  });
+})();
+
+/* ======================= 02 GPU CAPACITY ======================= */
+(function capacity(){
+  const GPUS=[{n:'RTX 4080',g:16,a:'Ada'},{n:'RTX 4090',g:24,a:'Ada'},{n:'A10',g:24,a:'Ampere'},{n:'RTX 5090',g:32,a:'Blackwell'},{n:'RTX PRO 5000',g:48,a:'Blackwell'}];
+  const box=document.getElementById('gpus'),act=document.getElementById('act');let gpu=GPUS[0];
+  GPUS.forEach(g=>{const b=document.createElement('button');b.className='chip';b.textContent=`${g.n} · ${g.g} GB`;b.onclick=()=>{gpu=g;[...box.children].forEach(c=>c.classList.toggle('on',c===b));calc()};box.appendChild(b)});box.firstChild.classList.add('on');
+  const cv=document.getElementById('capCanvas');const S=stage(cv,()=>{});const ctx=S.ctx;
+  let cams=0,motion=[],fps=0,fpw=0;
+  function calc(){cams=Math.floor(gpu.g*2.8);const p=act.value/100;
+    document.getElementById('actVal').textContent=act.value+'%';
+    document.getElementById('capCams').innerHTML=`${cams}<small>cameras</small>`;
+    document.getElementById('capNote').textContent=`${gpu.n} · ${gpu.a} architecture · ${gpu.g} GB video memory`;
+    fps=cams*(p*15+(1-p)*5);fpw=fps*.05;const nb=Math.max(1,Math.ceil(fpw/24));
+    document.getElementById('kvFps').textContent=Math.round(fps).toLocaleString();
+    document.getElementById('kvBps').textContent=20*nb;
+    document.getElementById('kvBatch').textContent=(fpw/nb).toFixed(1);
+    document.getElementById('kvSave').textContent='−'+Math.round((1-fps/(cams*30))*100)+'%';
+    const k=Math.round(p*cams);motion=Array.from({length:cams},(_,i)=>i<k);motion.sort(()=>Math.random()-.5);
+    tiles=Array.from({length:cams},(_,i)=>({flash:0,acc:Math.random()}));
+  }
+  let tiles=[],flying=[],bucket=0,winT=0,batches=[],gpuLoad=0,shuffleT=3;
+  act.oninput=calc;calc();
+  const SLOW=10; // visual time dilation
+  loop(S,(dt)=>{
+    const w=S.w,h=S.h,vdt=dt/SLOW;
+    const gx=w*.06,gw=w*.38,cols=Math.ceil(Math.sqrt(cams*gw/(h*.8))),rows=Math.ceil(cams/cols),cs=Math.min(gw/cols,(h*.78)/rows),gy=(h-rows*cs)/2;
+    const bx=w*.58,by=h*.5,gpx=w*.84;
+    shuffleT-=dt;if(shuffleT<=0){shuffleT=2.5;const i=Math.floor(rnd(0,cams)),j=Math.floor(rnd(0,cams));[motion[i],motion[j]]=[motion[j],motion[i]]}
+    tiles.forEach((tl,i)=>{tl.acc+=vdt*(motion[i]?15:5);tl.flash=Math.max(0,tl.flash-dt*3);
+      if(tl.acc>=1){tl.acc-=1;tl.flash=1;const c=i%cols,r=Math.floor(i/cols);flying.push({x:gx+c*cs+cs/2,y:gy+r*cs+cs/2,t:0,m:motion[i]})}});
+    for(let k=flying.length-1;k>=0;k--){const f=flying[k];f.t+=dt*2.2;if(f.t>=1){flying.splice(k,1);bucket++}}
+    winT+=vdt;if(winT>=.05){winT=0;let n=bucket;bucket=0;let off=0;while(n>0){const sz=Math.min(24,n);batches.push({sz,t:0,off:off++});n-=sz}}
+    for(let k=batches.length-1;k>=0;k--){const b=batches[k];b.t+=dt*1.6;if(b.t>=1){batches.splice(k,1);gpuLoad=Math.min(1,gpuLoad+b.sz/60)}}
+    gpuLoad=Math.max(0,gpuLoad-dt*.9);
+
+    ctx.clearRect(0,0,w,h);
+    ctx.font='10px JetBrains Mono,monospace';ctx.fillStyle=C.dim;ctx.fillText(`${cams} cameras`,gx,gy-10);ctx.fillText('50 ms window',bx-40,by-70);ctx.fillText('GPU · TensorRT',gpx-44,by-70);ctx.fillText(`slowed ${SLOW}× so you can see it`,gx,h-10);
+    tiles.forEach((tl,i)=>{const c=i%cols,r=Math.floor(i/cols),x=gx+c*cs,y=gy+r*cs,base=motion[i]?'61,139,255':'110,110,110';
+      ctx.fillStyle=`rgba(${base},${.14+tl.flash*.7})`;rr(ctx,x+1,y+1,cs-2,cs-2,Math.min(3,cs/4));ctx.fill()});
+    for(const f of flying){const u=f.t,e=u*u*(3-2*u),x=f.x+(bx-f.x)*e,y=f.y+(by-f.y)*e-Math.sin(u*Math.PI)*30;ctx.fillStyle=f.m?C.cyan:'#666666';ctx.fillRect(x-1.5,y-1.5,3,3)}
+    // window bucket
+    const fill=Math.min(1,bucket/24);ctx.strokeStyle='rgba(61,139,255,.5)';ctx.lineWidth=1.5;rr(ctx,bx-34,by-50,68,100,10);ctx.stroke();
+    ctx.fillStyle='rgba(61,139,255,.18)';rr(ctx,bx-32,by+48-96*fill,64,96*fill,8);ctx.fill();
+    ctx.beginPath();ctx.arc(bx,by-60,5,-Math.PI/2,-Math.PI/2+TAU*(winT/.05));ctx.strokeStyle=C.cyan;ctx.stroke();
+    ctx.fillStyle=C.text;ctx.textAlign='center';ctx.font='500 12px JetBrains Mono,monospace';ctx.fillText(bucket,bx,by+5);ctx.textAlign='left';
+    for(const b of batches){const x=bx+40+(gpx-50-bx-40)*b.t,y=by-10+b.off*16,wd=8+b.sz*1.6;ctx.fillStyle=C.green;ctx.globalAlpha=.85;rr(ctx,x,y,wd,12,3);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#0a0a0a';ctx.font='600 9px JetBrains Mono';ctx.fillText(b.sz,x+3,y+9)}
+    // gpu
+    const gg=ctx.createRadialGradient(gpx,by,0,gpx,by,90);gg.addColorStop(0,`rgba(0,255,136,${.06+gpuLoad*.25})`);gg.addColorStop(1,'transparent');ctx.fillStyle=gg;ctx.fillRect(gpx-90,by-90,180,180);
+    ctx.strokeStyle=`rgba(0,255,136,${.4+gpuLoad*.6})`;ctx.lineWidth=1.5;rr(ctx,gpx-44,by-50,88,100,12);ctx.stroke();
+    for(let r=0;r<6;r++)for(let c=0;c<5;c++){ctx.fillStyle=Math.random()<gpuLoad?'rgba(0,255,136,.85)':'rgba(0,255,136,.12)';ctx.fillRect(gpx-34+c*14,by-40+r*14,10,10)}
+  });
+})();
+
+/* ======================= 03 FORENSIC SEARCH (real detections) ======================= */
+(function forensic(){
+  const EV=window.EVENTS||[];const grid=document.getElementById('fsGrid');
+  const SYN={hardhat:'hard',helmet:'hard',vest:'vest',hivis:'vest',construction:'worker',employee:'worker',staff:'worker',workers:'worker',
+    bike:'bicycle',bikes:'bicycle',cyclist:'cyclist',cyclists:'cyclist',biker:'cyclist',riding:'riding',ride:'riding',
+    auto:'car',sedan:'car',cars:'car',suv:'suv',vehicles:'vehicle',truck:'vehicle',
+    lady:'woman',female:'woman',girl:'woman',women:'woman',guy:'man',male:'man',gentleman:'man',men:'man',
+    shopping:'shopper',customer:'shopper',customers:'shopper',shoppers:'shopper',shop:'store',retail:'store',supermarket:'store',aisle:'store',
+    corridor:'hallway',hall:'hallway',offices:'office',parking:'parking',carpark:'parking',outside:'outdoor',inside:'indoor',
+    coat:'jacket',jackets:'jacket',blond:'blonde',gray:'grey',teal:'teal',hoodie:'sweater',jumper:'sweater',
+    people:'group',persons:'group',crowd:'group',pair:'group',couple:'group',together:'group',
+    grabbing:'reaching',picking:'reaching',reach:'reaching',shelves:'shelf',walk:'walking',walks:'walking',pedestrian:'pedestrian',
+    hats:'hat',caps:'cap',shirts:'shirt',tshirt:'shirt',skirt:'skirt',striped:'striped',stripes:'striped',pedestrians:'pedestrian',
+    warehouses:'warehouse',factory:'warehouse',site:'warehouse',humans:'person',human:'person',someone:'person',somebody:'person',
+    orange:'orange',yellow:'yellow',navy:'navy',white:'white',silver:'silver',green:'green',brown:'brown',black:'black',dark:'dark'};
+  const STOP=new Set(['a','an','the','in','on','at','with','of','and','or','is','are','who','that','wearing','wears','near','by','to','from','for','some','any','show','me','find']);
+  const norm=w=>{w=w.toLowerCase();if(SYN[w])return SYN[w];if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return SYN[w.slice(0,-1)]||w.slice(0,-1);return w};
+  EV.forEach(e=>{e.T=new Set((e.tags+' '+e.cls+(e.cls==='person'?'':' vehicle')).split(/\s+/).map(norm))});
+  const df={};EV.forEach(e=>e.T.forEach(t=>df[t]=(df[t]||0)+1));
+  const idf=t=>Math.log(1+EV.length/(df[t]||.5));
+  const fmt=s=>`00:${String(Math.floor(s)).padStart(2,'0')}.${String(Math.floor(s%1*10))}`;
+  EV.forEach(e=>{const el=document.createElement('div');el.className='card';const[bx,by,bw,bh]=e.box;
+    el.innerHTML=`<div class="ph"><img src="${e.img}" alt="${e.cls} detected in ${e.scene.toLowerCase()}" loading="lazy"><div class="bx" style="left:${bx*100}%;top:${by*100}%;width:${bw*100}%;height:${bh*100}%"><i>${e.cls} ${e.conf.toFixed(2)}</i></div></div><div class="bar"><i></i></div><div class="meta"><span><b>${e.scene}</b> · ${fmt(e.t)}</span><span class="sc">&nbsp;</span></div>`;
+    grid.appendChild(el);e.el=el});
+  function search(){const q=document.getElementById('fsq').value;
+    const toks=[...new Set(q.toLowerCase().replace(/[^a-z\s-]/g,' ').replace(/hard[\s-]?hats?/g,'hard hat').replace(/hi-?vis/g,'vest').split(/[\s-]+/).filter(w=>w&&!STOP.has(w)).map(norm))].filter(t=>df[t]);
+    const first=new Map(EV.map(e=>[e,e.el.getBoundingClientRect()]));const tot=toks.reduce((s,t)=>s+idf(t),0);
+    EV.forEach(e=>{e.s=tot?toks.reduce((s,t)=>s+(e.T.has(t)?idf(t):0),0)/tot:0});
+    const sorted=[...EV].sort((a,b)=>b.s-a.s),top=sorted[0]?sorted[0].s:0;
+    sorted.forEach(e=>{grid.appendChild(e.el);const hit=tot&&e.s>=Math.max(.45,top*.75);e.el.classList.toggle('hit',!!hit);e.el.classList.toggle('miss',!!tot&&!hit&&e.s<.3);
+      e.el.querySelector('.bar i').style.width=(e.s*100)+'%';e.el.querySelector('.sc').textContent=tot?`match ${e.s.toFixed(2)}`:''});
+    if(reduce)return;
+    EV.forEach(e=>{const a=first.get(e),b=e.el.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top;if(!dx&&!dy)return;
+      e.el.style.transition='none';e.el.style.transform=`translate(${dx}px,${dy}px)`;requestAnimationFrame(()=>{e.el.style.transition='';e.el.style.transform=''})});
+  }
+  const sugg=['worker in a hard hat','white car in the parking lot','cyclist','woman in a brown jacket','someone reaching for a shelf','group of people in a hallway'];
+  const sb=document.getElementById('fsSugg');sugg.forEach(s=>{const b=document.createElement('button');b.className='chip';b.type='button';b.textContent=s;b.onclick=()=>{document.getElementById('fsq').value=s;search()};sb.appendChild(b)});
+  document.getElementById('fsGo').onclick=search;document.getElementById('fsq').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
+  let deb;document.getElementById('fsq').addEventListener('input',()=>{clearTimeout(deb);deb=setTimeout(search,300)});
+  document.getElementById('fsq').value='worker in a hard hat';search();
+})();
+
+/* ======================= 04 RELEASE PIPELINE ======================= */
+(function pipeline(){
+  const STEPS=[['Build','Export only edge files from the repository. No hub code, no history.'],['Leak check','Refuse the build if any hub-only module slipped in.'],['Compile','Proprietary modules compiled to native code, source removed.'],['Sign','Signed with a key that exists only in CI, never on the hub.'],['Upload','Recorded as unpublished. Nothing ships yet.'],['Promote','A deliberate, separate action by a person.'],['Device verifies','Checks the signature and its license lease, then installs.']];
+  const el=document.getElementById('steps'),status=document.getElementById('pipeStatus');
+  STEPS.forEach(([h,p],i)=>{const d=document.createElement('div');d.className='step'+(i===5?' gate':'');d.innerHTML=`<div class="k">step ${i+1}</div><h4>${h}</h4><p>${p}</p>`;el.appendChild(d)});
+  let running=false;const wait=ms=>new Promise(r=>setTimeout(r,reduce?ms/4:ms));
+  async function run(bad){if(running)return;running=true;const ds=[...el.children];ds.forEach(d=>d.className='step'+(d===ds[5]?' gate':''));
+    const ver=`2026.${String(new Date().getMonth()+1).padStart(2,'0')}.${String(new Date().getDate()).padStart(2,'0')}-${Math.floor(rnd(1,9))}`;
+    for(let i=0;i<ds.length;i++){const d=ds[i];d.classList.add('run');
+      status.textContent=i===5?'awaiting deliberate promotion…':i===6&&bad?'bundle altered in transit…':`release ${ver} · ${STEPS[i][0].toLowerCase()}…`;
+      await wait(i===5?1500:i===6?1100:650);d.classList.remove('run');
+      if(i===6&&bad){d.classList.add('fail');d.querySelector('p').textContent='Signature mismatch. Install refused; the device keeps running its current release.';status.innerHTML='<span style="color:var(--red)">✕ tampered bundle rejected on device</span>';break}
+      d.classList.add('ok');if(i===6){d.querySelector('p').textContent=STEPS[6][1];status.innerHTML=`<span style="color:var(--green)">✓ release ${ver} installed on the fleet</span>`}}
+    setTimeout(()=>{const p=ds[6].querySelector('p');if(bad)p.textContent=STEPS[6][1]},4000);running=false}
+  document.getElementById('runRel').onclick=()=>run(false);document.getElementById('runBad').onclick=()=>run(true);
+  new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){o.disconnect();setTimeout(()=>run(false),500)}},{threshold:.5}).observe(el);
+})();
+
+
+/* ======================= living background: a camera mesh ======================= */
+(function mesh(){
+  const cv=document.getElementById('bg');if(!cv)return;const ctx=cv.getContext('2d');
+  let W=0,H=0,N=[],pulses=[],mx=-999,my=-999,last=0;const D=150;
+  function init(){const d=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+    const n=Math.min(120,Math.round(W*H/13000));N=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H*1.4,vx:rnd(-.12,.12),vy:rnd(-.08,.08),hub:Math.random()<.14,f:0}))}
+  addEventListener('resize',init);init();
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
+  addEventListener('pointerleave',()=>{mx=my=-999});
+  const H2=()=>H*1.4;
+  function frame(t){const dt=Math.min(50,t-last);last=t;
+    ctx.clearRect(0,0,W,H);const sy=scrollY*.06,HH=H2();
+    const P=N.map(n=>{if(!reduce){n.x+=n.vx*dt/16;n.y+=n.vy*dt/16;if(n.x<-20)n.x=W+20;if(n.x>W+20)n.x=-20;if(n.y<0)n.y+=HH;if(n.y>HH)n.y-=HH}
+      let y=((n.y-sy)%HH+HH)%HH-H*.2;return{n,x:n.x,y}});
+    const edges=[];
+    for(let i=0;i<P.length;i++)for(let k=i+1;k<P.length;k++){const a=P[i],b=P[k],dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;if(d2<D*D){const d=Math.sqrt(d2);edges.push([a,b,d]);
+      const mxd=Math.hypot((a.x+b.x)/2-mx,(a.y+b.y)/2-my),boost=mxd<220?(1-mxd/220)*.35:0;
+      ctx.strokeStyle=`rgba(0,102,255,${(1-d/D)*.2+boost})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}}
+    if(!reduce&&edges.length&&Math.random()<dt/260){const e=edges[Math.floor(Math.random()*edges.length)];pulses.push({a:e[0].n,b:e[1].n,t:0,sp:rnd(.0008,.0014)})}
+    for(let i=pulses.length-1;i>=0;i--){const p=pulses[i];p.t+=p.sp*dt;const A=P.find(q=>q.n===p.a),B=P.find(q=>q.n===p.b);
+      if(p.t>=1||!A||!B||Math.hypot(A.x-B.x,A.y-B.y)>D*1.2){if(p.t>=1)p.b.f=1;pulses.splice(i,1);continue}
+      const x=A.x+(B.x-A.x)*p.t,y=A.y+(B.y-A.y)*p.t,tx=A.x+(B.x-A.x)*Math.max(0,p.t-.18),ty=A.y+(B.y-A.y)*Math.max(0,p.t-.18);
+      const g=ctx.createLinearGradient(tx,ty,x,y);g.addColorStop(0,'rgba(0,255,136,0)');g.addColorStop(1,'rgba(0,255,136,.9)');
+      ctx.strokeStyle=g;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(x,y);ctx.stroke();
+      ctx.fillStyle='#00ff88';ctx.beginPath();ctx.arc(x,y,1.8,0,TAU);ctx.fill()}
+    for(const{n,x,y}of P){n.f=Math.max(0,n.f-dt/900);const near=Math.hypot(x-mx,y-my)<160;
+      if(n.hub){const s=4+n.f*3;ctx.strokeStyle=n.f?`rgba(0,255,136,${.5+n.f*.5})`:`rgba(61,139,255,${near?.9:.45})`;ctx.lineWidth=1;ctx.strokeRect(x-s,y-s,s*2,s*2);
+        ctx.fillStyle=n.f?'#00ff88':'#0066ff';ctx.fillRect(x-1.5,y-1.5,3,3)}
+      else{ctx.fillStyle=n.f?`rgba(0,255,136,${.4+n.f*.6})`:`rgba(61,139,255,${near?.9:.38})`;ctx.beginPath();ctx.arc(x,y,1.4+n.f*1.5,0,TAU);ctx.fill()}}
+    if(!reduce)requestAnimationFrame(frame)}
+  requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!reduce){last=performance.now()}});
+})();
+
+/* ======================= page chrome ======================= */
+const nav=document.getElementById('nav');addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.getElementById('yr').textContent=new Date().getFullYear();
+})();
+</script>
+
 </body>
 </html>
